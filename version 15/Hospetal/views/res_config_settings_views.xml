@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_hospital" model="ir.ui.view">
+            <field name="name">res.config.settings.view.hospital</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+
+                    <div class="app_settings_block" data-string="Hospital" id="hospital" string="Hospital" data-key="Hospetal">
+<!--                        data-string="Hospital":- dah el name 2ele fe menu el soda 2ele 3ala shmal fe Settings
+                            data-key="Hospetal":- fe record <action> ta7t fe filed context feh 'module' : 'Hospetal' fa data-key howa 2ele hayrbot be xpath be action  (98)-->
+                        <h2>Hospital Management</h2>
+                        <div class="row mt16 o_settings_container" id="hospital_setting">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Cancellation  Date</span>
+                                    <div class="text-muted content-group mt16">
+                                        <field name="cancel_days" class="text-center oe_inline"/>
+                                        <span>Days before the end date</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hospital_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <!--el field dah ma3nah 2n el view men 3`ar save, create, edite buttons by defulte target = current   -->
+            <field name="context">{'module' : 'Hospetal', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="hospital_config_settings_menu"
+                  name="Settings"
+                  parent="Hospetal.configuration"
+                  sequence="-1"
+                  action="hospital_config_settings_action"
+                  groups="base.group_system"/>
+    </data>
+</odoo>

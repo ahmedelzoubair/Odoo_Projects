@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    el record 2ele ta7t dah 3shan add function at action button (125) -->
+    <record id="action_mark_as_done" model="ir.actions.server">
+        <!--         model:- dah table 2ele save fe el actions functions 2ele mawgoda fe system -->
+        <field name="name">Mark As Done</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hospital_appointment"/>
+        <field name="binding_view_types">list</field>
+        <!--        dah 3shan 2a5ale el (Mark As Done) mawgod fe list bass Note:- lo shelt list we 7atet form hay7sl el 3aks-->
+        <field name="state">code</field>
+        <!--        de 2ele bet7aded 2n no3 (Action To Do) is (Executed Python Code)-->
+        <field name="code">
+            for record in records:
+                if record.state == 'in_consultation':
+                    record.action_done()
+            # selected records at UI will be receiving id inside records variable
+            # action_done():- related to method at the related modle
+        </field>
+    </record>
+    <record id="view_appointment_form_out" model="ir.ui.view">
+        <field name="name">view.appointment.form.out</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state=='done'" decoration-danger="state=='cancel'"
+                  decoration-warning="state=='in_consultation'" decoration-info="state=='draft'"
+                  sample="1" multi_edit="1">
+                <!-- decoration-success="state=='done=> 3shan line el done kolo yetlawen be lon done -
+                     multi_edit="1"=> 3shan 2a2dr 23aml edit from tree view note:- must select the row
+                     sample="1" => is used to display sample data when no actual records are available.-->
+                <header>
+                    <button name="action_in_consultation" type="object" string="In Consultation" class="oe_highlight"/>
+                </header>
+                <field name="appoint_id" optional="hide" readonly="True"/>
+                <!-- optional="hide => 3shan 25aleh mawgod fe 3 dots 2ele 3ala yemen-->
+                <field name="patient_id" optional="hide" decoration-it="1" />
+                <field name="appointment_date" decoration-bf="1"/>
+<!--                decoration-bf="1" make filed bold at tree view
+                    decoration-success="1" => column colored with green
+                    decoration-success="gender=='femail'" => el femail fe column colored by green -->
+                <field name="activity_ids" widget="list_activity"/>
+                <!--  -39-  field dah 3shan 2zher to to.do list fe tree view "activity_ids" dah inhert modul men 'mail.thread' mas2ol 2no yezher el to.do fe chater we widget 3shan shakl el icon meeting call,...-->
+                <field name="priority" optional="hide" widget="priority"/>
+                <!--   hazher el stars fe tree widget="priority"=> 3shan tzhr el stars men 3`aro hazhr 2sma2 (Normal,Low,..) -40- -->
+                <field name="doctor_id" widget="many2one_avatar_user"/>
+                <!-- "doctor_id":- name of many2one field bygeb name doc bass without widget
+                      widget="many2one_avatar :- hygeb pic of user gamb 2smo
+                      widget="many2one_avatar_user" :- on click at image chatting room will open (41 meats)-->
+                <field name="state" widget="badge"
+                       decoration-success="state=='done'"
+                       decoration-info="state=='draft'"
+                       decoration-danger="state=='cancel'"
+                       decoration-warning="state=='in_consultation'"/>
+                <!--   widget="badge" :- ha5ale shakl el state fe tree bydawe we decoration badi le koll state color
+                                            we lo add decoration fe tree men fo2 el row kolo will take the colore (37)-->
+                <button name="action_done" type="object" class="fa fa-check-square btn-success"
+                        attrs="{'invisible':[('state','!=','in_consultation')]}"/>
+                <!--               hena 2ana 7atet button 3ala gamb fe tree view 3shan men bara 3aml done lel app (94)
+                                   class="fa fa-check-square btn-success:- (fa-check-square) shakl el zorar sa7 (btn-success) 3shan lono yb2a green
+                                   Note:- 2ana remove string men button 3shan yb2a shakolo as UI-->
+                <button name="action_cancel" type="object" class="fa fa-times btn-danger"
+                        states="draft,in_consultation"
+                        context="{'default_reason': 'txt from cancel object button'}"/>
+                <groupby name="patient_id">
+                    <!-- <groupby> dah tag byt7at fe tree 3shan lo 3ayz add button to groups if i make at group by any field UI (96)
+                           name="patient_id":- el record 2ele hadef feh el button lama 23ml groupby beh. Note:- we can't make thies option 2ela 3ala Many2one fields -->
+                    <button name="action_test" string="Click Me" type="object" class="oe_highlight"/>
+                    <!--   name="action_test":- dah 2sm el function 2ele hat run when click button. Note:- his func created at patient model not appointment, badehe 3shan dah group el relation (96)                   -->
+                    <button name="edit" string="Edit" type="edit"/>
+                    <!--  el button 2ele fo2 dah mo5ass lel edite, fe el case de hy5alek tft7 el edite page lel patient (96) -->
+                </groupby>
+                <field name="progress" widget="progressbar"/>
+<!--              widget="progressbar":- el widget dah hay5ali shakl el filed as a par we el number have %  -->
+            </tree>
+        </field>
+    </record>
+    <record id="view_appointment_search" model="ir.ui.view">
+        <field name="name">view.appointment.search</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="patient_id" string="Patient Name"/>
+                <field name="state" string="State Name"/>
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <!-- expand="0":- 3shan lama 2age 2ft7 el page el group by dah mayft7sh automatic lo ="1" hayft7 automatic
+                         string="Group By":- el group by de ha tet3ml fe zorar el Group By by   -->
+                    <filter name="group_by_gender" string="Patient" context="{'group_by':'patient_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_appointment_form" model="ir.ui.view">
+        <field name="name">view.appointment.form</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done"/>
+                    <!-- options=> dictionary key "clickable" value "1" means that i can click on statusbar options ,
+                         statusbar_visible=> el options 2ele feh yetshafo (draft we in_consultation we done)-->
+                    <button name="action_in_consultation" type="object" string="In Consultation" class="oe_highlight"
+                            attrs="{'invisible': [('state', 'in', ['done', 'in_consultation'])]}"/>
+                    <button name="action_done" type="object" string="Done" class="oe_highlight"
+                            attrs="{'invisible':[('state','=','draft')]}"/>
+                    <button name="%(action_cancel_appointment)d" type="action" string="Cancel"
+                            context="{'default_reason': 'text from appointment form by default_reason,\n we App ID from defult func fe cancel_app model','hide_appointmentField':1,}"/>
+                    <!--      context="{'default_reason'} de context el form view dic feh keys (default) / (reason) variabol field at cancel_appointment model
+                              'hide_appointmentField':1} (hide) key zay el (default)/ (appointmentField) dah 3`albn create variabol on the fly / (1) make (appointmentField') a Hide Field Based On Context (79)-->
+                    <!--       <button name="action_cancel" type="object" string="Cancel" states="draft,in_consultation"-->
+                    <!--        class="oe_highlight" data-hotkey="c"/>-->
+                    <!-- states=> "action_cancel" function name that will run el button yezhr fe 7alat (draft,in_consultation)
+                    data-hotkey="c"=> lama 2ados alt keybord el 7arf 2ele hayzhr 3ala cancel (c)
+                    class="oe_highlight" => 3shan el zorar yb2a leh color we wad7 -->
+                    <button name="action_go_whatsapp" type="object" string="Whats`app Msg" class="oe_highlight" icon="fa-whatsapp"/>
+
+                </header>
+                <sheet>
+                    <div>
+                        <h2>
+                            <field name="priority" widget="priority"/>
+                            <!-- 2awel 7aga div=> tag tfhm 2n h2=> ya5od 7agm mo3ayn-->
+                            <!-- widget="priority" 3shan ta5od shakl el stars we lo shelt el widget badl stars drop down list be options beta3t Selection field-->
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="appoint_id"/>
+                            <field name="patient_id" default_focus="1" widget="selection"/>
+                            <!--   default_focus="1" 3shan 2awl maft7 bage yetargt el name on click
+                                   widget="selection":- 5asa be fields many2one that make the filed can`t add or open patient field -->
+                            <field name="doctor_id" widget="many2one_avatar"/>
+                            <!--    widget for get the image of doc (41)
+                                    lo zawed fe widget _user lama tedos 3ala pic yezhr el chatting room of doc-->
+                            <field name="appointment_date"/>
+                            <field name="operation"/>
+                            <field name="duration"/>
+<!--                            this field will computed auto as calendar view  -->
+                            <field name="active" invisible="1"/>
+                            <button name="action_go_to_patient" string="Go To The Patient" type="object"
+                                    class="oe_highlight" confirm="Are u sure go to patient?"/>
+                            <!--   button when click open patient view by action_hospital_patient bet3ha  -->
+                            <button name="action_test_url" string="Open URL" type="object"
+                                    class="oe_highlight" confirm="Run action_test def (URL Action) ?!"/>
+                        </group>
+                        <group>
+                            <field name="hide_seals_price" groups="base.group_no_one"/>
+                            <!-- groups="base.group_no_one" => el field dah mesh hayzhr 2ela lo fat7 el debug mode -->
+                            <field name="ref" readonly="1" force_save="1"/>
+                            <!-- force_save="1":- 3shan field el readonly mesh save fe data 5ososan lo related field fa force|_save 3shan data save in field  -->
+                            <field name="gender" readonly="False"/>
+                            <field name="tag_id" widget="many2many_checkboxes"
+                                   options="{'color_field':'color_of_tag'}"/>
+                            <!-- widget="many2many_checkboxes":- 3shan yezher 2odamo koll el options wey5tar menha zay (widget="radio") bass de 5asa be field many2many-->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Progress" name="progress">
+<!--                            <field name="progress" widget="gauge"-->
+<!--                                   options="{'style': 'width:160px; height: 120px;'}"/>  (126) -->
+                            <field name="progress" widget="percentpie"/>
+                        </page>
+                        <page string="Prescription" name="Prescription">
+                            <field name="prescription"
+                                   options="{'collaborative':true, 'resizeable':true, 'codeview':true}"/>
+                            <!--   collaborative:- 3shan lama 23ml update fe file hml yesam3 lel anther users at same time
+                                   resizeable:- 3shan yb2 size able
+                                   codeview:- 3shan ytal3 zorar lo dost 3aleh yetal3 el HTML code lele ma3mol gowah
+                                   -->
+                        </page>
+                        <page string="Pharmacy" name="Pharmacy">
+                            <!-- gowa el notebook fe page Pharmacy 3ml field named (appointment_pharmacy_lines_ids) ha careat feh koll 2awle gaii -->
+                            <field name="appointment_pharmacy_lines_ids">
+                                <!-- dah feild one2many 2ele rabet appointemen be 2dwiya (lines)-->
+                                <!--                                <form editable="bottom">-->
+                                <!--                                    &lt;!&ndash; el form view hena mesh hatzhr bass lazm 23mlha create 3shan dah el main page bass ba5aleha hide we 2shta3`al men 3ala tree view-->
+                                <!--                                         ya3ni lo shelt el tree haytl3 popup view lel form bass lo shelt el form erorr&ndash;&gt;-->
+                                <!--                                    <group>-->
+                                <!--                                        <field name="product_id"/>-->
+                                <!--                                        <field name="price"-->
+                                <!--                                               attrs="{'column_invisible': [('parent.hide_seals_price', '=', True)]}"/>-->
+                                <!--                                        &lt;!&ndash; add lel line fe tree we form 3shan homa related beba3d&ndash;&gt;-->
+                                <!--                                        <field name="quantity"/>-->
+                                <!--                                        <field name="appointment_datee" optional="hide"/>-->
+                                <!--                                    </group>-->
+                                <!--                                </form>-->
+                                <tree editable="bottom">
+                                    <!-- editable="bottom" => dah 3shan 23rf 2a3ml add gowa men list tree -->
+                                    <field name="product_id"/>
+                                    <field name="price"
+                                           attrs="{'column_invisible': [('parent.hide_seals_price', '=', True)]}"
+                                           widget="monetary"/>
+                                    <!-- attrs:- parent=> 3eda 3ala el module 2ele feh (hide_seals_price) 2ele howa "hospital.appointment"
+                                         boss 2ana gowa filed 2ele 2sln rabt one2may field
+                                         lama yekon hide_seals_price 2ele gowa parent = True (column_invisible) el filed 2ele feh (price) {51}
+                                         widget="monetary":- 3shan 2zher gamb price el currency of the compony {132}
+                                         options="{'currency_field': 'currency_id'}:- option to specify currency field at xml -->
+                                    <field name="quantity"/>
+                                    <!-- el fields (product_id, price, quantity) men gowa modle el "appointment.pharmacy.lines" direct -->
+                                    <field name="currency_id" invisible="1" groups="base.group_multi_company"/>
+<!--                                    groups="base.group_multi_company":- 2ele add fe group dah hyshlf field -->
+                                    <field name="price_subtotal" groups="base.group_multi_currency"/>
+                                    <field name="appointment_datee" optional="hide"/>
+                                    <!-- FYKI appointment_datee filed gowa appointment_lines mesh appointment -->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hospital_appointment" model="ir.actions.act_window">
+        <field name="name">Appointment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">tree,form,calendar,activity</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create 1st Appointment
+            </p>
+        </field>
+    </record>
+<!--el record 2ele ta7t 3shan add activity view   -->
+    <record id="view_patient_activity" model="ir.ui.view">
+        <field name="name">view.patient.activity</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <activity string="Appointment">
+                <!--                el activity de view zay el list we ma7tota as icon clock gamb icnon el list
+                                     de byzher feha el to-do 2ele marbota be koll appointment (59)
+                                     string="Appointment"=> el name 2ele hayzhr 2awel matft7 activity page 3ala el shemal fo2-->
+                <field name="patient_id"/>
+                <!--                da feild 2ele rabt el appointment be pationt 2ele bygeb meno data paitent,
+                                    we lo dost 3ala sora hayzr gender fe 7ala 2n _rec_name = gender (59)-->
+                <!--                note:- ana lo 3`ayrt el name le 2ee field tane erorr-->
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('hospital.patient', 'image', record.patient_id.raw_value)"
+                             t-att-title="record.patient_id.value" t-att-alt="record.patient_id.value"/>
+                        <!--                        el 'hospital.patient' 3shan 2ageb meno image we el ba2e el hendi mesh fahmo :D-->
+                        <div>
+                            <field name="ref"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+<!-- el record dah 3shan 23arf el calendar gowa appointment (127) -->
+    <record id="calendar_hospital_appointment" model="ir.ui.view">
+        <field name="name">calendar.hospital.appointment</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <calendar string="Hospital Appointment" date_start="appointment_date" date_delay="duration"
+                      color="state" mode="month" quick_add="False" hide_time="True"
+                      form_view_id="%(Hospetal.view_appointment_form)d" event_open_popup="True" event_limit="3">
+<!--                date_start:- dah bada5l fe filed no3o date we 3ala 2asaso basgl fe el calendar ma2a3ed el appo
+                    date_delay="duration" :- dah 3shan lama 23ml expand le appointment (ya3ni lo app hata5od 2kter men youm)
+                    mode="month":- dah 3shan lama 2ft7 calender yb2a defult view is month
+                    color="state":- change colore of app at calender as per state
+                    quick_add="False":- to remove to create app from calender view, Note:- when click at day will open new app with the date u click on it from the calender
+                    hide_time="True":- when click at the app from calender time of app invisible
+                    event_open_popup="True":- 3shan el app tezher as a popup view not open the form view
+                    event_limit="3":- the max app will be show is 3-->
+                <field name="patient_id" filters="1" avatar_field="image"/>
+<!--                when at field here will show when click at the app from calender
+                    filters="1":- add at right side a filter with patient state
+                    avatar_filed="image":- add image of the patient
+                    form_view_id= :- 3shan lo 3andi 2aktr men form view 2a7add 2anhi wa7da fohom by id -->
+                <field name="state" invisible="1" filters="1"/>
+<!--                Note:- if remove invisible the state will show when click at the app from calender -->
+            </calendar>
+        </field>
+    </record>
+
+    <menuitem id="appointment"
+              action="action_hospital_appointment"
+              parent="appointment_main_menu"
+              name="Appointment"
+              sequence="0"/>
+</odoo>
+
+

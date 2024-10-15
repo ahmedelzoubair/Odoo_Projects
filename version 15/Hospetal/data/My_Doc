@@ -1,0 +1,134 @@
+how to create new model (67)
+------------------------------
+@terminal
+cd odoo
+ls
+./odoo-bin scaffold job_positions_ /home/ahmed/odoo17/Custom_addons
+---------
+how to inherit model (68)
+------------------------------
+for ex:- i will inherit sales model
+1-@website open model at debuger click on (Edite View:list) get name of model (sale.order)
+2-@python => inherit model (om_odoo_inheritence)
+@ main __manifest__.py => 'depends': ['sale']
+@ models file change create model named (sale_order.py)
+@ models file => __init__.py import sale_order.py
+@ models file => sale_order.py refer to file
+---------
+How To Inherit And Add Field To A Model In Odoo (69)
+------------------------------
+when create any variable @ (sale_order.py) hatla2eh add @ (sale.order) database
+@ inherit model (om_odoo_inheritence) => models => (sale_order.py) create variable (confirmed_user_id)
+to add (confirmed_user_id) @ sales => Quotations
+1:- @ inherit model (om_odoo_inheritence) => views => create (sale_order_view.xml)
+2:- @ __manifest__.py 'data':[sale_order_view.xml]
+@ sale_order_view.xml
+1:- @website go to place that u need to add field
+=> debug => (Edite View:Form) => External ID : sale.view_order_form :- dah el External ID lel form view 2ele 2nta wa2f feha
+2:- we need to inherit el form 2ele fatet gowa (sale_order_view.xml) 3shan 23rf add gowaha el field (confirmed_user_id)
+a) we anta fet7 (Edit View: Form) hatla2e tab 2smaha (Inherited Views) doll views inherited men sale.order 2od5ol 3ala 2awel view copy Extr id search @odoo taraaa :D
+---------
+How To Inherit A Function In Odoo (70)
+------------------------------
+ana ha inherit func 3shan for ex.. button el confirm fe el sales badl mayml 7aga w7da y3ml 7gten
+refer to (om_odoo_inheritence) => models => (sale_order.py)
+---------
+How To Override Create Method In Odoo (71)
+------------------------------ Method is associated with an object, while a function is not.
+lama 2age 23ml crete to new (SO,PO,patient,ex...) fe button (save) dah ma3molo func gowa odoo library fa ha3ml zay darss 2ele fate hageb el method we 2azawed 3aleha
+refer to (Hospetal) => models => (patient.py)
+------------------------------
+How To Run Odoo From Terminal (after 76)
+---------
+How To Generate Odoo Configuration File From Terminal
+---------
+How To Install Module and create database From Terminal In Odoo
+---------
+Error no 98 Address Already In Use Error Odoo and how kill odoo process
+---------
+How To Upgrade A Module From terminal
+---------
+How To Create Database From Terminal
+---------
+Menu And SubMenu Without Specifying Parent In Odoo (76)
+---------
+Odoo Environment (after 77)
+---------
+How to add buttons at tree view (94)
+-----------------------------------------
+https://fontawesome.com/v4/icon/check-square:- dah website to get 2shkal el class
+---------
+Error (97)
+------------------------------
+http://localhost:8015/web/database/manager :- open the databases link
+how to clear history:-
+right click => history
+delete browsing data
+select (browsing history, cached images and files)
+---------
+How to add setting to module (98)
+----------------------------------------
+How to get the menuitem:
+1) settings
+2) technical menu
+3) menu items
+4) search with the name of the tab that u want to get a new page under it for ex:- configuration
+5) select configuration that related to for ex:- Hospital 7amada/Configuration
+6) press debugger
+7) select View Metadata
+8) at (XML ID:) the id of the menuitem for ex:- Hospetal.configuration
+Note:- at Menu Items Hospital 7amada/Configuration down at <notebook> => <page name="Submenus"> => all the Submenus that get under pearent configuration
+
+How to get (ir.config_parameter) model:
+1) settings
+2) technical menu
+3) System Parameters
+---------
+How To Set Inverse Function For Computed Field In Odoo (99)
+---------------------------------------------------------------
+at patient model (age) filed is compute that can`t be add in this video we will make the filed can be edite and when i add number at filed callulate the date
+---------
+How To Hide User Group From Users Form View In Odoo || Remove User Group From Users Form View (117)
+--------------------------------------------
+at settings => users&companies => users => list of (Technical) that located at users&companies => groups
+ha2dr 2a2ol men yeshof anhi access a7a :D
+---------
+Server Action In Odoo || Add Action To Action Button In Odoo (125)
+--------------------------------------------
+add functions at action button
+1) Settings => Technical => Server Actions
+2) create, Name = (Mark As Done), Model = (Hospital Appointment), Action To Do = (Executed Python Code)
+3) at <notebooke> Python Code <page>
+for record in records:      => for loop to calling all records that selected at model (Hospital Appointment) note:- selected records be receiving id inside records variable
+    record.action_done()    => koll record gebto nafz 3aleh method 2ele 2smaha (action_done)
+4) save
+5) Create Contextual Action
+---------
+Calendar View In Odoo (127)
+------------------
+Basics Of PostgreSQL Query || Odoo Queries || PSQL Insert, Update, Select and Delete Queries (131)
+------------------
+@Terminal
+1) sudo su postgres # switching to postgres user
+2) psql
+3) \c database_name # connecting to the database
+4) select name from hospital_patient (enter to get all names at DB)
+select name from hospital_appointment limit 5 => get the 1st 5 elements
+select ha.patient_id, ha.patient_name from hospital_appointment ha left join hospital_patient hp ON (hp.id = ha.patient_id)
+ha.patient_id, ha.patient_name:- (ha) alias [esm mosta3ar], (patient_id) id:- field gowa
+select name, date_of_birth from hospital_patient order by id (desc) => get the data incremental with id (descending)
+select name, date_of_birth from hospital_patient where gender='male' order by id => get data with condition gender = male
+update hospital_patient set name='New name' where id=63 => change name of record id 63
+update hospital_patient set gender='female' where id=63 => female is a key of gender field at python code
+update hospital_patient set gender='female' where gender='male' => this where will change all male to female
+insert into hospital_patient (name,active) values ('Test Record',True) => add new record at hospital_patient database with name and active is ...,...
+delete from hospital_patient where id=67 => delete record
+delete from hospital_patient where name='ahmed sayed' => delete record
+----------------------------------------
+Monetary Field And Widget Monetary (132)
+----------
+at general settings (Currency) can change el 3omla
+----------------------
+How To Change Order Of Tracking Values In Odoo (134)
+---------------
+ticnical=> model => at any field track => attribute Enable order tracking:- dah 2ele beyt7add feh trteb el track
