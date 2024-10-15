@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_order_inherit" model="ir.ui.view">
+            <field name='name'>purchase.order.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="step1"/>
+                    <field name="step2" attrs="{'invisible': [('step1', '=', False)]}"/>
+                    <field name="step3" attrs="{'invisible': [('step2', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//header" position="inside">
+<!--                    <field name="state" widget="statusbar"-->
+<!--                           statusbarx_visible="draft,sent,step_one,step_two,step_three,purchase" readonly="1"/>-->
+                    <button name="action_step_one" type="object" string="Step One" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_step_two" type="object" string="Step Two" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'step_one')]}"/>
+                    <button name="action_step_three" type="object" string="Step Three" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'step_two')]}"/>
+                </xpath>
+                <xpath expr="//header/button[@id='draft_confirm']" position="attributes">
+<!--                    <attribute name="invisible">1</attribute>-->
+                    <attribute name="attrs">{'invisible': [('state', '=', 'draft')]}</attribute>
+                    <attribute name="attrs">{'invisible': [('state', '=', 'step_one')]}</attribute>
+                    <attribute name="attrs">{'invisible': [('state', '=', 'step_two')]}</attribute>
+                    <attribute name="attrs">{'invisible': [('state', '=', 'step_three')]}</attribute>
+                </xpath>
+<!--                <xpath expr="//header" position="inside">-->
+<!--                    <button name="action_step_two" type="object" string="Step Two" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>-->
+<!--                </xpath>-->
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
+        <!--<?xml version="1.0" encoding="utf-8"?>-->
+        <!--<odoo>-->
+        <!--    <data>-->
+        <!--        <record id="purchase_order_inherit" model="ir.ui.view">-->
+        <!--            <field name='name'>purchase.order.inherit</field>-->
+        <!--            <field name="model">purchase.order</field>-->
+        <!--            <field name="inherit_id" ref="purchase.purchase_order_form"/>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <xpath expr="//field[@name='date_order']" position="after">-->
+        <!--                    <field name="step1"/>-->
+        <!--                    <field name="step2" attrs="{'invisible': [('step1', '=', False)]}"/>-->
+        <!--                    <field name="step3" attrs="{'invisible': [('step2', '=', False)]}"/>-->
+        <!--                </xpath>-->
+        <!--                <xpath expr="//form/sheet" position="inside">-->
+        <!--                    <field name="step_one_done" invisible="1"/>-->
+        <!--                </xpath>-->
+        <!--                <xpath expr="//header/button[@id='bid_confirm']" position="attributes">-->
+        <!--                    <attribute name="attrs">{'invisible': [('step_one_done', '=', 'False')]}</attribute>-->
+        <!--                </xpath>-->
+        <!--&lt;!&ndash;                invisible: This key controls the visibility of a field or widget. If the condition evaluates to True, the field or widget is hidden; if False, it is visible.&ndash;&gt;-->
+        <!--                <xpath expr="//header" position="inside">-->
+        <!--                    <button name="action_step_one" type="object" string="Step One" class="oe_highlight"-->
+        <!--                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>-->
+        <!--                </xpath>-->
+        <!--            </field>-->
+        <!--        </record>-->
+        <!--    </data>-->
+        <!--</odoo>-->
+
+
+        <!--========================================================-->
+        <!--<record id="purchase_order_inherit" model="ir.ui.view">-->
+        <!--            <field name='name'>purchase.order.inherit</field>-->
+        <!--            <field name="model">purchase.order</field>-->
+        <!--            <field name="inherit_id" ref="purchase.purchase_order_form"/>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <xpath expr="//field[@name='date_order']" position="after">-->
+        <!--                    <field name="step1"/>-->
+        <!--                    <field name="step2" attrs="{'invisible': [('step1', '=', False)]}"/>-->
+        <!--                    <field name="step3" attrs="{'invisible': [('step2', '=', False)]}"/>-->
+        <!--                </xpath>-->
+        <!--                <xpath expr="//form/sheet" position="inside">-->
+        <!--                    <field name="step_one_done" invisible="1"/>-->
+        <!--                </xpath>-->
+        <!--                        <xpath expr="//header/button[@id='draft_confirm']" position="attributes">-->
+        <!--                            <attribute name="invisible">1</attribute>-->
+        <!--                        </xpath>-->
+        <!--                <xpath expr="//header/button[@name='button_confirm']" position="attributes">-->
+        <!--                    <attribute name="attrs">{'invisible': [('step_one_done', '=', False)]}</attribute>-->
+        <!--                </xpath>-->
+        <!--                <xpath expr="//header" position="inside">-->
+        <!--                    <button name="action_step_one" type="object" string="Step One" class="oe_highlight"-->
+        <!--                            attrs="{'invisible': [('state', '=', 'draft')]}"/>-->
+        <!--                </xpath>-->
+        <!--            </field>-->
+        <!--        </record>-->
