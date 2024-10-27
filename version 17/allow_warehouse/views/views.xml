@@ -1,0 +1,102 @@
+<odoo>
+    <data>
+
+        <record id="view_users_form_inherit_warehouse" model="ir.ui.view">
+            <field name="name">res.users.form.inherit.warehouse</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_ids']" position="after">
+                    <field name="allowed_warehouse_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+
+<!--        the below record to create new group at User Groups, AND will add by default at users Access Rights
+            when i create group her when install model the group will created by default  -->
+        <record id="group_view_ahmedsayed" model="res.groups">
+<!--          model="res.groups" => this is the model that will save in it all groups  -->
+            <field name="name">Ahmed Sayed</field>
+        </record>
+
+        <!-- i will add new field at the below xpath  -->
+        <record id="view_warehouse_inherit" model="ir.ui.view">
+            <field name="name">view_warehouse_inherit</field>
+            <field name="model">stock.warehouse</field>
+<!--            model name (stock.warehouse) -->
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+<!--            (stock) is the folder that content xml file (named view_warehouse) that create view of fields of model (stock.warehouse) -->
+            <field name="arch" type="xml">
+<!--             the below xpath is so direct because the field is at the page directly (at Architecture page not at Inherited Views )  -->
+                <xpath expr="//notebook/page[@name='technical_info']/group/group/field[@name='view_location_id']" position="after">
+                    <field name="view_location_id" string="ahmed sayed" groups="allow_warehouse.group_view_ahmedsayed"/>
+<!--              groups="allow_warehouse.group_view_ahmedsayed" => this is the group XML ID that i created at previous
+                  when I add (groups="allow_warehouse.group_view_ahmedsayed") to this field Only users that have this access will see it  -->
+                </xpath>
+
+            </field>
+        </record>
+
+<!--            at the below I try to go (purchase_method) field by the previous way put i can`t so i make the 2nd below way-->
+<!--        <record id="view_product_supplier_inherit_new" model="ir.ui.view">-->
+<!--            <field name="name">product.template.supplier.form.inherit.new</field>-->
+<!--            <field name="model">product.template</field>-->
+<!--            <field name="inherit_id" ref="product.product_template_form_view"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//group[@name='bill']/field[@name='purchase_method']" position="after">-->
+<!--                    <field name="purchase_method" widget="radio" string="ahmed sayed"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+<!--             This is 2nd way to add field without xpath
+                   at Product => purchase page there is field named (purchase_method)
+                   The below record it contains the target field at (purchase) file => view => (product_views.xml) and the id is (view_product_supplier_inherit)
+                   we add (purchase.) before id to inherit all over the record -->
+                <record id="purchase.view_product_supplier_inherit" model="ir.ui.view">
+                    <field name="name">product.template.supplier.form.inherit</field>
+                    <field name="model">product.template</field>
+                    <field name="inherit_id" ref="product.product_template_form_view"/>
+                    <field name="arch" type="xml">
+                        <xpath expr="//page[@name='purchase']" position="attributes">
+                            <attribute name="invisible" remove="1" separator=" or "></attribute>
+                            <attribute name="groups">purchase.group_purchase_user</attribute>
+                        </xpath>
+                        <group name="purchase" position="before">
+                            <field name="seller_ids"
+                                   context="{'default_product_tmpl_id': id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}"
+                                   nolabel="1" invisible="product_variant_count &gt; 1"
+                                   readonly="product_variant_count &gt; 1"/>
+                            <field name="variant_seller_ids"
+                                   context="{'model': 'product.template', 'active_id': id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}"
+                                   nolabel="1" invisible="product_variant_count &lt;= 1"
+                                   readonly="product_variant_count &lt;= 1"/>
+                        </group>
+                        <group name="bill" position="attributes">
+                            <attribute name="groups">purchase.group_purchase_manager</attribute>
+                        </group>
+                        <group name="bill" position="inside">
+                            <field name="purchase_method" widget="radio"/>
+                            <field name="purchase_method" widget="radio" string="ahmed sayed"/>
+                        </group>
+                        <group name="purchase" position="inside">
+                            <group col="1">
+                                <group string="Purchase Description">
+                                    <field name="description_purchase" nolabel="1" colspan="2"
+                                           placeholder="This note is added to purchase orders."/>
+                                </group>
+                                <group string="Warning when Purchasing this Product" groups="purchase.group_warning_purchase">
+                                    <field name="purchase_line_warn" nolabel="1" colspan="2"/>
+                                    <field name="purchase_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
+                                           invisible="purchase_line_warn == 'no-message'"
+                                           readonly="purchase_line_warn == 'no-message'"
+                                           required="purchase_line_warn != 'no-message'"/>
+                                </group>
+                            </group>
+                        </group>
+                    </field>
+                </record>
+    </data>
+</odoo>
