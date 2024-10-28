@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="sale_order_line_inherit_image" model="ir.ui.view">
+            <field name="name">sale.order.line.inherit.image</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//notebook//page[@name='order_lines']//tree//field[@name='product_template_id']" position="after">
+                    <!-- Add your fields or attributes here -->
+                    <field name="image" readonly="True" widget="image" options="{'width': 5, 'height': 5}"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
