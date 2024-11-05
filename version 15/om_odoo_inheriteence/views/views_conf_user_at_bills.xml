@@ -24,6 +24,8 @@
                 <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="before">
 <!--                    at this way we target (invoice_line_ids) field that related one2many with (account.move) model-->
                     <field name="line_number"/>
+                    <!--  Note:- diff between (/) and (//)
+                            //tree :- means check inside page[@id='invoice_tab'] about tree view  -->
                 </xpath>
             </field>
         </record>
