@@ -17,6 +17,8 @@
 <!--                </xpath>-->
                  <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
                     <field name="line_number"/>
+                     <!--  Note:- diff between (/) and (//)
+                            //tree :- means check inside page[@id='invoice_tab'] about tree view  -->
                 </xpath>
             </field>
         </record>
