@@ -26,7 +26,7 @@
                     <field name="line_number"/>
                     <!--  Note:- diff between (/) and (//)
                             //tree :- means check inside page[@id='invoice_tab'] about tree view  -->
-<!--                     Note 2:- field (line_number) will not save data cuz at Journal Items page (page Next to Invoice Lines page) there is anther One2many relation with (invoice_line_ids) field 
+<!--                     Note 2:- field (line_number) will not save data cuz at Journal Items page (page Next to Invoice Lines page) there is anther One2many relation with (line_ids) field 
                                     so we need to add (line_number) field at Journal Items page to solve this issue. -->
                 </xpath>
             </field>
