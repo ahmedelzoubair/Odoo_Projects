@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="so_line_inherit_conf" model="ir.ui.view">
+            <field name="name">so.line.inherit.conf</field>
+            <field name="model">sale.order</field>
+            <!-- why the model name is (sale.order) note (sale.order.line)
+                   cuz (sale.order.line) model dose not have Special View [at main view of (sale.order) model I created a view related to (sale.order.line) by a relation One2many between (sale.order) and (sale.order.line) at {order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines')} ]    -->
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='order_lines']//tree//field[@name='price_unit']" position="before">
+                    <field name="confirmed_user_id_soLine" readonly="True"/>
+                </xpath>
+<!--                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='order_lines']/field[@name='order_line']/tree[1]/field[@name='name']"-->
+<!--                       position="after">-->
+<!--                    <field optional="show" name="confirmed_user_id_soLine" string="hamada"/>-->
+<!--                </xpath>-->
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
+
+
