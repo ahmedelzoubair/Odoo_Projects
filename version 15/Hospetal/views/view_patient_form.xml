@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_patient_form_out" model="ir.ui.view">
+        <field name="name">view.patient.form.out</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree export_xlsx="0">
+                <!-- export_xlsx="0":- that means this tree will be without button download exel sheet (Export All button)   -->
+                <field name="ref" optional="hide"/>
+                <field name="name" string="Patient Name"/>
+                <field name="appointment_count" sum="Total Appointment: "/>
+                <!-- sum:- hagyb magmo3 el app tat7 fe el 2a5r -->
+                <field name="age" avg="Average Age"/>
+                <field name="gender"/>
+                <field name="tags_ids" widget="many2many_tags" options="{'color_field':'color_of_tag'}" optional="hide"/>
+                <!-- 3shan 2zher el tags fe tree men bara lazm 23rf el field 2no many2many 3shan yegeb el records
+                     bydawi we color_of_tag dah name beta3 el colore filed @patient tage model -->
+            </tree>
+        </field>
+    </record>
+    <record id="view_patient_search" model="ir.ui.view">
+        <field name="name">view.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- el field 2ele ta7t dah how be3ml shearch be Patient Name we lo 3aml search be age el bar yefhm 2n chr name we int age-->
+                <field name="name" string="Patient Name"
+                       filter_domain="['|', ('name', 'ilike', self), ('age', 'ilike', self)]"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+                <filter name="filter_female" string="Female" domain="[('gender','=','female')]"/>
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+                <!-- <separator/>-->
+                <!-- <filter name="filter_kid" string="Kid" domain="[('age','&lt;=',5)]"/>-->
+                <group expand="0" string="Group By">
+                    <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                    <!-- <filter string="Age" name="group_by_age" context="{'group_by':'age'}"/>-->
+                </group>
+                <searchpanel>
+                    <field name="gender" icon="fa-user" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">view.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+<!--                    el div 2ele ta7t 3shan 23ml add lel smart buttons (129)-->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_appointments" icon="fa-star">
+                            <field string="Appointments" name="appointment_count" widget="statinfo"/>
+<!--                            string:- dah el esm 2ele hayzhr fe button, name:- filed computed num of app that related to patient
+                                name:- dah field computed by read_group -->
+                        </button>
+                    </div>
+<!--                    el div 2ele ta7t 3shan 23ml add lel alert 2ele hayzher fe koll patient at his Birthday  (122) -->
+                    <div class="alert alert-info text-center o_form_header" role="alert"
+                         attrs="{'invisible':[('is_birthday','=',False)]}">
+<!--                        if i change info to warning color of alert change from blue to orange -->
+                        <a class="close" data-dismiss="alert" href="#">x</a>
+<!--                        3shan 23ml add lel close mark (x) at the top-->
+                        <div>
+                            <strong>Today is Birthday !</strong>
+<!--                            <strong> deh 3shan 25ali el kalam bold -->
+                        </div>
+                        <div>Wish <field name="name" readonly="1"/>
+                        </div>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <!-- widget="image" => 3shan 2fahm el field dah 2eno image field fa yezhr el pic
+                         class="oe_avatar"=> 3shan lama na2lt el feild 2awel 7aga fe sheet gab el image 3ala top right-->
+                    <div class="oe_title">
+                        <h4>
+                            <field name="ref"/>
+                        </h4>
+                        <h2>
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <!-- hadef lel name 2ele ta7t lable/ for="name":- el lable 3shan filed named (name)/ class="oe_edit_only":- el lable zahr fe 7alet el edit once add name lablo be55 -->
+                            <field name="name"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+<!--                            <field name="appointment_count"/>-->
+                            <field name="is_birthday" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="gender" invisible="context.get('hide_gender')" widget="radio"/>
+                            <!-- widget="radio":- hayzhar el mael we femael we gabo selection button-->
+                            <field name="tags_ids" widget="many2many_tags" options="{'color_field':'color_of_tag'}"/>
+                            <!-- tags_ids=> da field many2many met3arf gowa patient marbot be tag
+                                 many2many_tags=> el widget dah betfahm xml view in el field many2may fa el view bey5tlf we byb2a tage fe shakl bydawi(Oval shape)
+                                 {'color_field':'color_of_tag'}=> dah dictionary el kye (color_field) :- mas2ol 3an color 2ele hay5do field dah
+                                 (color_of_tag):- 2sm el field 2ele fe tag module (57)-->
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Other Information" name="other_info">
+                            <field name="parent" attrs="{'invisible':[('age','>=',18)]}" />
+                            <!--                           attrs:- dictionary key is (invisible) value [('age','>',18)] => when age > 18 make parent filed invisible
+                                                               can add anther condition by [('age','>',18),('gender','=','male')]  (89=>91)-->
+                            <field name="marital_status" attrs="{'invisible':[('age','&lt;',18)]}"/>
+                            <field name="partner_name"
+                                   attrs="{'readonly':[('marital_status','!=','married')],'invisible':[('age','&lt;',18)],'required':[('marital_status','=','married')]}"/>
+                        </group>
+                        <group string="Personal Information" name="personal_info">
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="website" widget="url"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hospital_patient" model="ir.actions.act_window">
+        <field name="name">Patient</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">
+            {
+            'default_gender':'male'
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Patient
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem id="patient"
+              action="action_hospital_patient"
+              parent="patient_detalis"
+              name="Patient"
+              sequence="0"/>
+</odoo>
+
+

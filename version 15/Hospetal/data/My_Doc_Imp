@@ -1,0 +1,262 @@
+Expiration:
+----------------
+How to solve expiration date issue
+----
+Technical => System Parameters => database.expiration_date
+
+Create new Database:
+-----
+1) go to odoo17.conf file
+2) change admin_passwd: to admin
+
+Drop Database
+----
+At Terminal Linux
+1) sudo su - postgres => enter password
+2) DROP DATABASE "test123"
+3) DROP DATABASE
+
+How to get the history of your code
+----
+1) select the code
+2) right click
+3) local history
+
+-------------------------------------------------------------------------------------------------------------
+System Buttons:
+----------------
+1) Create Button: dah zorar el save 2ele byzhr ba3d mados create
+---------------
+ @api.model
+    def create(self,vals):
+
+2) Edit Button: dah zorar el Edit 2ele byzher lama 2ft7 self (patient or appointment mo3ayen)
+--------------
+def write(self,vals):
+
+3) Duplicate Button: at Action button after Archive u will get duplicate butt for copy self (tage or patient mo3ayen)
+-------------------
+ @api.returns('self',lambda value: value.id)
+    def copy(self, default=None):
+
+4) Delete Button: if select at any self (patient or appointment mo3ayen) press action then delete buyyon
+----------------
+a) def unlink(self):
+b) @api.ondelete(at_uninstall=False)
+
+5) Export Button:- dah button 2ele by3ml download lel exel sheet
+----------------
+<tree export_xlsx="0">
+
+------------------------------------------------------------------------------------------------------
+I have many ways to add condition to the field:
+------------------------------------------------
+@ python:
+-----
+1) Add Function
+a) to Buttons:
+    def action_cancel(self):
+b) to field by compute
+    age = fields.Integer(compute='_compute_age',tracking=True)
+-------------
+2) @api
+a) api onchange:- For triggering real-time updates in the UI.(lazm user ye3`ayer fe UI)
+    @api.onchange('patient_id')
+b) api depends:- For computed fields that depend on other fields.(when change at filed execute the below code )
+    @api.depends('date_of_birth')
+c) api constrains:- For validation,Raises errors if constraints are violated,Prevents records from being saved if validation fails.
+    @api.constrains(date_of_birth)
+--------------
+3) Domain
+a)Domain in python file:-
+i) at field relation Many2one to limit the data that coming:
+appointment_id = fields.Many2one('hospital.appointment', string="Appointment ID",
+                                        domain=['|',('state','=','draft'),('priority','in',('1','2',False))])
+ii) at self.env[].read_group to limit the data that coming
+appointment_group = self.env['hospital.appointment'].read_group(domain=[('state','=','done')],fields=[],groupby=[])
+
+iii) at def return to limit the data that will open
+ def action_view_appointments(self):
+        return{
+            'name' : _('Appointments'),
+            'res_model' : 'hospital.appointment',
+            'view_mode' : 'list,form',
+            'context' : {},
+            'domain' : [('patient_id','=',self.id)],
+            'target' : 'current',
+            'type' : 'ir.actions.act_window',
+        }
+
+ b)Domain in xml file:-
+i) at filter filed to limit filed
+  <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+
+ii) at action record (ir.actions.act_window) to limit what will be open
+<record id="action_femail_hospital_patient" model="ir.actions.act_window">
+        <field name="name">Femail Patient</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{"default_gender":"female","default_age":"35","hide_gender":1}</field>
+<!--        when create new femail patient field gender = female and age = 35-->
+        <field name="domain">[('gender','=','female')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                creat bass
+            </p>
+        </field>
+    </record>
+
+----------------------------
+4) SQL Constraints
+_sql_constraints = [('unique_tag_name','unique (name,active)','Name Must Be Unique'),
+                        ('check_sequence','check (sequence > 0)','sequence Must Be > 0')]
+----------------------------
+5) Filed Attribute
+a) ondelete='restrict'
+b) ondelete='cascade'
+c) compute='_compute_age'
+d) inverse="_inverse_compute_age"
+e) tracking=1
+
+@ XML:
+-----
+1) attrs (attribute)
+a) <field name="price" attrs="{'column_invisible': [('parent.hide_seals_price', '=', True)]}"/>
+b) <field name="parent" attrs="{'invisible':['|',('age','>',18),(gender','=','male')]}"/>
+   <field name="partner_name" attrs="{'readonly':[('marital_status','!=','married')],'invisible':[('age','&lt;',18)]}"/>
+
+2) context (attribute)
+ a) <button name="%(action_cancel_appointment)d" type="action" string="Cancel" class="oe_highlight"
+         context="{'default_reason': 'text from appointment form by default_reason','hide_appointmentField':1}"/>
+ b) <field name="date_cancel" invisible="context.get('hide_appointmentField')"/>
+
+-------------------------------------------------------------------------------------------------------------
+System Environment (env):
+------------
+the env is:- he environment (env) is an instance of the Environment class that provides various tools and access to the current context,
+such as the current user, model registry, database cursor, and other useful resources.
+It is essential when interacting with Odoo's ORM (Object-Relational Mapping) and allows you to perform operations within the Odoo framework.
+
+What Does env Contain?
+----
+Database Cursor (cr):
+
+self.env.cr :- gives access to the database cursor, which is used for executing SQL queries directly if needed.
+Example: self.env.cr.execute("SELECT * FROM sale_order")
+User (user):
+
+self.env.user :- returns the current user (res.users) record.
+Example: self.env.user.name gives the name of the current user.
+Company (company):
+
+self.env.company :- returns the current company (res.company) record based on the context.
+Example: self.env.company.name gives the name of the current company.
+Context (context):
+
+self.env.context :- is a dictionary that contains the current execution context. It includes details like the language (lang), active model, and other information passed during execution.
+Example: self.env.context.get('lang') retrieves the current language.
+Model Registry (self.env['model.name']):
+
+The environment allows you to access any model dynamically using the model name as a string, providing you with the ability to create, read, update, or delete records of that model.
+Example: self.env['sale.order'].search([]) :- returns all records of the sale.order model.
+Reference (ref):
+
+self.env.ref allows you to access XML records (e.g., views, actions, or configurations) by their XML IDs.
+Example: self.env.ref('sale.action_quotations') :- retrieves the action for quotations.
+
+Why Use self.env?
+----
+1: Access Models Dynamically: You can access any model dynamically, allowing you to perform operations without needing to import models directly
+products = self.env['product.product'].search([('type', '=', 'product')])
+
+2:Control Access Based on Context: It allows you to get information about the current context, like the current user or company, so you can make decisions based on this information.
+if self.env.user.has_group('sales_team.group_sale_manager'):
+    # Perform actions specific to sales managers
+
+3:Manage Database Transactions: It gives access to the database cursor for more advanced SQL operations when the ORM is not sufficient.
+self.env.cr.execute("UPDATE sale_order SET state = 'done' WHERE id = %s", [order_id])
+
+4:Retrieve Configuration and Reference Data: Using self.env.ref, you can get configuration records or access XML-defined data
+view = self.env.ref('sale.view_order_form')
+
+Example Usage
+----
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    def action_confirm(self):
+        # Get the current user
+        current_user = self.env.user
+
+        # Check if the user belongs to a specific group
+        if current_user.has_group('sales_team.group_sale_manager'):
+            # Perform some action only for sales managers
+            self.write({'state': 'sale'})
+        else:
+            raise UserError("You do not have the rights to confirm this order.")
+
+In this example:
+
+self.env.user retrieves the current user.
+self.env['sale.order'] dynamically accesses the sale.order model.
+self.env.context could be used to check if any specific context key affects this operation.
+
+main points for env
+----
+1) why when i user (self.env["res.users"].browse(6).name) i get the name of user
+but at (self.env["res.company"].browse(2).name) ) dose not work ?
+- Users (res.users): By default, users usually have access to read the name of any user in the system.
+- Companies (res.company): Access to company records can be restricted depending on the current user's company and its allowed companies, even when using browse. If the user’s allowed companies don’t include the company with id = 2, Odoo won’t let you access that company’s data directly.
+
+Refer to: Odoo ORM Method | Odoo ORM Methods (139)
+---------
+
+-------------------------------------------------------------------------------------------------------------
+security way:-
+-----
+hospital_patient,hospital_patient,model_hospital_patient,base.group_user,1,1,1,1    # name of the model hospital.patient to target model change (.) with (_)
+if remove (base.group_user) all users will see hospital.patient model
+-------------------------------------------------------------------------------------------------------------
+
+Difference between context and attrs:-
+-------
+1. Context:- The context in Odoo is a dictionary that provides additional information to views, actions, and records, influencing how data is processed and displayed.
+It can pass default values, carry extra data, or change the behavior of fields in forms, lists, and other views.
+
+Example of Context in XML:
+
+<button name="action_view_report" type="object" context="{'default_report_type': 'detailed'}" string="View Report"/>
+In this example:
+context="{'default_report_type': 'detailed'}" sets a default value for the report_type field to "detailed" when this button is clicked.
+
+Example of Context in Python:
+return {
+    'type': 'ir.actions.act_window',
+    'name': 'Appointments',
+    'res_model': 'hospital.appointment',
+    'view_mode': 'list,form',
+    'context': {'default_patient_id': self.id}
+}
+In this example:
+
+context is passed to the action, setting the default value of patient_id when creating a new appointment to the current record’s ID.
+
+2. Attrs:- attrs (short for attributes) is an attribute in XML that allows you to apply conditional formatting to fields in Odoo views.
+It dynamically controls the visibility, read-only state, or requirement of fields based on certain conditions.
+Unlike context, attrs is primarily used to define how fields appear and behave in the user interface (UI) by responding to specific conditions on the form.
+
+Example of Attrs in XML:
+<field name="discount" attrs="{'invisible': [('is_discount_applicable', '=', False)]}"/>
+
+In this example:
+1) attrs="{'invisible': [('is_discount_applicable', '=', False)]}" means the discount field will only be visible if is_discount_applicable is True.
+If is_discount_applicable is False, the discount field will be hidden.
+
+2) <field name="price" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('state', '=', 'confirmed')]}"/>
+readonly: The price field will be read-only if state is anything other than 'draft'.
+required: The price field will be required if state is 'confirmed'.
+
+Summary:
+Context is used for passing information and setting defaults, often at a higher level in actions, buttons, and methods.
+Attrs is used to control the UI appearance of fields (such as visibility, read-only, or required states) based on specific conditions in the view.

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="odoo_playground_view_form" model="ir.ui.view">
+        <field name="name">odoo.playground.view.form</field>
+        <field name="model">odoo.playground</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="model_id"/>
+                    <field name="code" widget="ace" options="{'mode': 'python'}"/>
+<!--                   widget="ace" options="{'mode': 'python'}":- 3shan yedeni 5awas el python mode at the website filed
+                        Note:- i can change python to xml -->
+                </group>
+                <group>
+                    <button name="action_execute" string="Execute" class="btn-primary" type="object" data-hotkey="q"/>
+                </group>
+                <group>
+                    <field name="result"/>
+                </group>
+                <footer>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_playground" model="ir.actions.act_window">
+        <field name="name">Play Ground</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">odoo.playground</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+<!--        el field dah ma3nah 2n el view men 3`ar save, create, edite buttons
+        by defulte target = current   -->
+    </record>
+
+    <menuitem id="menu_playground"
+              action="action_playground"
+              parent="menu_technical"
+              name="Play Ground"
+              sequence="0"/>
+</odoo>
+
+

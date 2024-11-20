@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_id_appointment_medicine_lines">
+        <!-- template: This tag defines a template in Odoo. Templates are reusable code snippets or layouts that can be rendered in the Odoo framework. -->
+        <t t-foreach="docs" t-as="o">
+            <!-- docs: is a variable passed to the report template by Odoo. Typically, docs contains the records (models) that needs for which the report is being generated (e.g., a list of sale.order or res.partner objects).
+                 The t-foreach: the way at report to loop over all the records in the docs variable (docs). For each record, the variable "o" is set to the current record. -->
+            <t t-call="web.basic_layout">
+                <!-- t-call: is an attribute at template to store (loads an existing) and response what type of reusable code at template, in this case will stor (web.html.container)
+                     web.basic_layout: This template, created by Odoo Env, defines a base container for HTML reports. It includes necessary HTML tags, CSS, and JavaScript libraries to structure the report
+                     Note:- at (web.html_container) the card will show by basic templet as pdf(15) -->
+                <div class="page">
+                    <!-- <div class="page">: Defines a division (<div>) element in HTML, which acts as a container for the report content.
+                         class="page": This CSS class, typically defined in Odoo’s report styling, sets up the layout for each page of the report.
+                         The page class in Odoo reports often defines margins, padding, and page-break properties, ensuring that each div with this class represents a single page in the PDF report.-->
+                    <div class="oe_structure"/>
+                    <!-- The oe_structure class is an Odoo-specific CSS class. That It marks a container or a structural block that can be edited using Odoo’s Website Builder or QWeb View Editor and  It allows users to add, modify, or arrange content (e.g., text, images, widgets) interactively in the UI. -->
+                    <div class="row">
+                        <table class="table table-condensed" style="border: 3px solid black !important;">
+                            <!-- class="table-condensed": This is another Bootstrap class that reduces the padding (space) inside table cells, making the table more compact.
+                                 style: This is an inline CSS style that applies additional styling to the table. border: 3px solid black: Adds a black border with a thickness of 3 pixels around the table, !important; :- Ensures that this inline style overrides any conflicting styles from external or internal CSS. -->
+                            <!-- Note: I remove <div class="col-xs-8"> to make table take all page -->
+                            <tr>
+                                <!-- <tr>: Defines a row within either <thead>, <tbody>, or directly in <table>  -->
+                                <!-- Note: The Table content only one row and I will split into two <td> 40% and 60% -->
+                                <td width="50%">
+                                    <!-- <td>: stands for data cells, and it represents a cell within a table row (<tr>). While <td> can conceptually correspond to a column, it is technically a cell in the grid of a table. with width="40%" -->
+                                    <p style="text-align:center;padding-top:10px;">
+                                        <!-- <p>: This is an HTML tag for defining a paragraph. (text-align:center;): Centers the text content horizontally within the paragraph and Makes the text appear in the middle of the container (from left to right) to display All text inside the <p> will be aligned to the center. (padding-top:10px;) Adds 10 pixels of vertical spacing above the text, separating it from neighboring elements. -->
+                                        <img t-if="not o.patient_image" t-att-src="'/web/static/img/placeholder.png'"
+                                             height="140" border="1" width="120"/>
+                                        <!-- t-if="not o.image" :- This is an Odoo QWeb directive that acts as a conditional statement. If in docs the o.image is not found i will print placeholder image at path (t-att-src: addons => web => ....) with height, border and width -->
+                                        <img t-if="o.patient_image"
+                                             t-att-src="'data:image/png;base64,%s' % to_text(o.patient_image)"
+                                             height="140" border="1" width="120"/>
+                                        <!-- The (src) attribute dynamically make sure the image field data in a (base64) format. to_text(o.image) => Converts the binary image data (o.image) into a string that can be safely embedded in the HTML. -->
+                                    </p>
+                                </td>
+                                <td width="50%">
+                                    <table>
+                                        <tr>
+                                            <td colspan="3" class="text-center">
+                                                <!-- colspan="3": attribute specifies that this cell spans 3 columns.  -->
+                                                <span t-field="o.patient_id.name" style="font-weight: bold;"/>
+                                                <!-- The <span> tag is an inline HTML element typically used to group text or apply specific styling to parts of a text.
+                                                     Note: I create patient_name field at appointment model that related to patient name cuz I try to call name by () -->
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>
+                                                    <strong>Age.</strong>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>:</span>
+                                            </td>
+                                            <td>
+                                                <span t-field="o.patient_age"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>
+                                                    <strong>Reference.</strong>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>:</span>
+                                            </td>
+                                            <td>
+                                                <span t-field="o.ref"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <span>
+                            <!-- <h4><strong>Appointment Medicine Lines</strong></h4> -->
+                            <h4 style="font-weight: bold;">Appointment Medicine Lines</h4>
+                        </span>
+                        <table class="table table-sm o_main_table" name="appointment">
+                            <!-- class="table table-sm o_main_table: table-sm => A Bootstrap class that reduces the size of the table by using smaller padding in rows and columns. o_main_table => An Odoo-specific CSS class, likely used for additional custom styling or functionality specific to Odoo modules. -->
+                            <thead>
+                                <!-- Created the head of the table, that contains 3 <th> (<th> header cells: is same of <td> but at table head) belongs to one row -->
+                                <tr>
+                                    <th name="th_medicine" class="text-left">
+                                        <span>
+                                            <strong>Medicine</strong>
+                                        </span>
+                                    </th>
+                                    <th name="th_sale_price" class="text-left">
+                                        <span>
+                                            <strong>Sales Price</strong>
+                                        </span>
+                                    </th>
+                                    <th name="th_quantity" class="text-left">
+                                        <span>
+                                            <strong>Quantity</strong>
+                                        </span>
+                                    </th>
+                                    <th name="th_Subtotal" class="text-left">
+                                        <span>
+                                            <strong>Subtotal</strong>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <t t-set="appointment_count" t-value="0"/>
+                            <!-- t-set: created a new field (counter) on fly at report and his value equal 0 -->
+                            <t t-set="total" t-value="0"/>
+                            <t t-foreach="o.appointment_pharmacy_lines_ids" t-as="line">
+                                <!-- create anther for loop at appointment_pharmacy_lines_ids field (this field is a relation One2many field between appointment model and appointment_pharmacy_lines model) with iterator named lines
+                                     Note: I catch the (appointment_pharmacy_lines_ids) field from (docs) using (o) iterator -->
+                                <tr>
+                                    <!-- 1st step at the loop, create <tr> (row) has three <td> (data cell) -->
+                                    <td>
+                                        <span t-field="line.product_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.price"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.quantity"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.price_subtotal"/>
+                                        <t t-set="total" t-value="line.price_subtotal + total"/>
+                                    </td>
+                                </tr>
+                                <t t-set="appointment_count" t-value="appointment_count + 1"/>
+                                <!-- 2nd step at the loop, Add 1 to the counter and add each additional line.price_subtotal to total -->
+                                <!-- So, The functionality of for loop check the relation between two models (appointment.py) and (appointment_pharmacy_lines.py) through the relation field (appointment_pharmacy_lines_ids) and when get line add to report. And calculate (appointment_count and total)  -->
+                            </t>
+                            <tr>
+                                <!-- After loop add the below <tr>, Note if add this <tr> after table the func, of colspan="3" will not implemented and the below <td> They will become attached together -->
+                                <td colspan="3">
+                                    <span>
+                                        <strong>Total Appointment Lines</strong>
+                                    </span>
+                                    <span>
+                                        <strong> = </strong>
+                                    </span>
+                                    <span>
+                                        <strong>
+                                            <t t-esc="appointment_count"/>
+                                        </strong>
+                                    </span>
+                                </td>
+                                <td class="text-left">
+                                    <span>
+                                        <strong>Total = </strong>
+                                    </span>
+                                    <span>
+                                        <strong>
+                                            <t t-esc="total"/>
+                                        </strong>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+
