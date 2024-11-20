@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_inherit" model="ir.ui.view">
+            <field name="name">account.move.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='header_right_group']/div[@name='journal_div']" position="after">
+                    <field name="confirmed_user_id_so" readonly="True"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="account_move_inherit_line" model="ir.ui.view">
+            <field name="name">account.move.inherit.line</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+<!--                1st way to target the xpath of (account.move.inherit.line) -->
+                <xpath expr="//notebook/page[@id='invoice_tab']//tree//field[@name='product_id']" position="after">
+                    <field name="confirmed_user_id_so_line" readonly="True"/>
+                </xpath>
+<!--                2nd way to target the xpath of (account.move.inherit.line)  -->
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="before">
+<!--                    at this way we target (invoice_line_ids) field that related one2many with (account.move) model-->
+<!--                    Note:- diff between (/) and (//)
+                            //tree :- means check inside page[@id='invoice_tab'] about tree view. BUT /tree:- get in field[@name='invoice_line_ids'] go directory to tree view (if there is any fild or div etc. we will face an error wrong path) -->
+                    <!-- Note 2:- field (line_number) will not save data cuz at Journal Items page (page Next to Invoice Lines page) there is anther One2many relation with (line_ids) field
+                                    so we need to add (line_number) field at Journal Items page to solve this issue. -->
+                    <field name="line_number"/>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="after">
+                    <field name="line_number" invisible="1"/>
+                </xpath>
+<!--                create the previous xpath to solve problem at previous (Note 2) -->
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
+
+
