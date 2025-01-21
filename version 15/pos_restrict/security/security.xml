@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="restrict_user" model="ir.rule">
+        <field name="name">Config User</field>
+        <field name="model_id" ref="point_of_sale.model_pos_config"/>
+        <!-- point_of_sale => This is the module name (technical name of the Point of Sale app in Odoo).
+             model_pos_config => This is the technical name of the pos.config model in Odoo. In Odoo, models are referenced in XML using the format    -->
+        <field name="domain_force">[('id','in',user.allowed_pos.ids)]</field>
+        <!-- id => This refers to the primary key of the pos.config model (i.e., the id of the POS configuration).
+             user.allowed_pos.ids => This retrieves the list of ids of the POS configurations that the current user is allowed to access (stored in the allowed_pos field of the res.users model). -->
+        <field name="groups" eval="[(4,ref('point_of_sale.group_pos_user'))]"/>
+        <!-- groups => This rule applies to users in the point_of_sale.group_pos_user group (regular POS users).
+             eval => attribute in Odoo XML is used to evaluate a Python expression. It allows you to dynamically compute values or perform operations when loading the XML data.
+             4 => command code in Odoo for relational fields. It means: t adds a reference to an existing record in a Many2many or One2many field.
+             point_of_sale => refers POS model ticnical name at Groups (Groups:- the groups that created at POS model like mangers, users, etc.)
+             group_pos_user => users group  -->
+        <!-- ref('point_of_sale.group_pos_user') returns the database ID of the res.groups record for the POS User group.
+               Link the POS User group (with the ID returned by ref) to the current record (in this case, the ir.rule record). -->
+    </record>
+    <record id="order_user" model="ir.rule">
+        <field name="name">Orders User</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="domain_force">[('config_id','in',user.allowed_pos.ids)]</field>
+        <!-- config_id => This is a foreign key field in the pos.order model that links an order to a specific POS configuration (pos.config).
+                          It represents the POS configuration under which the order (sessions) was created.-->
+        <field name="groups" eval="[(4,ref('point_of_sale.group_pos_user'))]"/>
+    </record>
+    <!-- pos.config: This model represents the POS configurations (or POS sessions) in Odoo.
+         pos.order: This model represents the sales transactions (orders) made in the Point of Sale system.-->
+
+
+    <!-- The below records refer the domain rules for Mangers that related to (group_pos_manager)   -->
+    <record id="restrict_manager" model="ir.rule">
+        <field name="name">Config Manager</field>
+        <field name="model_id" ref="point_of_sale.model_pos_config"/>
+        <field name="domain_force">[]</field>
+        <field name="groups" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
+    </record>
+
+    <record id="order_manager" model="ir.rule">
+        <field name="name">Orders Manager</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="domain_force">[]</field>
+        <field name="groups" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
+    </record>
+</odoo>
