@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--The below record to add new PDF action report for patient-->
+    <record id="report_patient_card" model="ir.actions.report">
+        <field name="name">Patient Card</field>
+        <field name="model">hospital.patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <!-- To set the report type as PDF -->
+        <field name="report_name">Hospetal.report_patient_id_card</field>
+        <!-- To set name of report -->
+        <field name="report_file">Hospetal.report_patient_id_card</field>
+        <field name="binding_model_id" ref="model_hospital_patient"/>
+        <!-- To identification the model like in security file  -->
+        <field name="binding_type">report</field>
+        <!-- To check that your report is created:- Settings => Technical menu => Reports => search with Patient -->
+    </record>
+
+
+    <!--The below record to add new PDF action report for appointments lines -->
+    <record id="report_appointment_medicine_lines" model="ir.actions.report">
+        <field name="name">Appointment Medicine Lines</field>
+        <field name="model">hospital.appointment</field>
+        <field name="report_type">qweb-pdf</field>
+        <!-- To set type of report to PDF -->
+        <field name="report_name">Hospetal.report_id_appointment_medicine_lines</field>
+        <!-- To set name of report as PDF -->
+        <field name="report_file">Hospetal.report_id_appointment_medicine_lines</field>
+        <field name="binding_model_id" ref="model_hospital_appointment"/>
+        <!-- To identification the model like in security file  -->
+        <field name="binding_type">report</field>
+        <!-- To check that your report is created:- Settings => Technical menu => Reports AND print button will appears at patient form view    -->
+
+    </record>
+
+    <!-- The below record to add new Excel action report for appointments
+         Note: don`t forget to at (__manifest__) => depends => add ("report_xlsx") -->
+    <record id="report_patient_card_xls" model="ir.actions.report">
+        <field name="name">Patient Card Excel</field>
+        <field name="model">hospital.patient</field>
+        <field name="report_type">xlsx</field>
+        <!-- To set type of report as xlsx (odoo15/Custom_addons/report_xlsx/models/ir_report.py) -->
+        <field name="report_name">hospetal.report_patient_card_id_xlsx</field>
+        <!-- To set name of xlsx report, Note: at Excel report we must start name by smale letter Because when calling name at python must be start by smale letter -->
+        <field name="report_file">hospetal.report_patient_card_id_xlsx</field>
+        <field name="binding_model_id" ref="model_hospital_patient"/>
+        <!-- To identification the model like in security file  -->
+        <field name="binding_type">report</field>
+        <!-- To check that your report is created:- Settings => Technical menu => Reports AND print button will appears at patient form view    -->
+    </record>
+
+    <!-- The below record for print button at cancel appointment (wizard) -->
+    <record id="report_cancel_appointment_wizard" model="ir.actions.report">
+        <field name="name">Cancel Appointment Wizard</field>
+        <field name="model">cancel.appointment.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <!-- To set type of report to PDF -->
+        <field name="report_name">Hospetal.report_cancel_appointment_id_wizard</field>
+        <!-- To set name of report as PDF -->
+        <field name="report_file">Hospetal.report_cancel_appointment_id_wizard</field>
+        <field name="binding_model_id" ref="model_cancel_appointment_wizard"/>
+        <!-- To identification the model like in security file  -->
+        <field name="binding_type">report</field>
+        <!-- To check that your report is created:- Settings => Technical menu => Reports AND print button will appears at patient form view    -->
+
+    </record>
+
+</odoo>
+
+

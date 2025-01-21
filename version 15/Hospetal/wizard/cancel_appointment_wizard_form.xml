@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cancel_appointment_wizard_form" model="ir.ui.view">
+        <field name="name">cancel.appointment.wizard.form</field>
+        <field name="model">cancel.appointment.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="appointment_id"/>
+                        <field name="reason"/>
+                    </group>
+                    <group>
+                        <field name="date_cancel" invisible="context.get('hide_appointmentField')"/>
+<!--                       invisible="context.get('hide_appointmentField')" => Return back to the "hospital.appointment" model
+
+                                invisible => dah el name tage lo 3amlt el value 1 (invisible="1") el field mesh hyban ex(archive)
+                                context.get =>  context (dic feh keys koll key bey3ml 7aga mo3`yana) / get (method 5asa be dic betgeb tedelo kye yegeb value)
+                                hide_appointmentField => ana 3araft zorar 2smo (string="Cancel") gowa appointment form byzher el form de.... [el zorar no3o action bya5od 2sm el action form 2ele hena 3shan yft7 el form de]
+                                3ayz lama 2ados 3ala el zorar dah we 2ft7 el form de field el date 2ele hena (date_cancel) y5tefe
+                                3amlt create le kye gded gowa context 2smo (appointmentField) we 25alet no3o (hide)
+                                3han.. 2a5ali el (invisible) tshta3`al be shakl mo3ayn created hide_appointmentField be7as 2awel lama 2ada5alo fe filed 2ele 3ayzo y3melo visible   -->
+                    </group>
+                </group>
+                <footer>
+                    <!-- footer :- tage to identification the buttons at popup view form -->
+                    <button name="action_cancel" string="Cancel Appointment" class="btn-primary" type="object" data-hotkey="z"/>
+<!--
+                        class="btn-primary"=> maine button
+                        data-hotkey=> when press at alt button at  keyboard will appear "z" letter at "Cancel Appointment" button  (62)-->
+                    <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                    <!-- Print Button that used to print PDF contains fields of (cancel.appointment.wizard) model  -->
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="v"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_cancel_appointment" model="ir.actions.act_window">
+        <field name="name">Cancel Appointment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">cancel.appointment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <!-- name="target"=> means from view as a popup window (65)-->
+    </record>
+
+    <menuitem id="cancel_appointment"
+              action="action_cancel_appointment"
+              parent="appointment_main_menu"
+              name="Cancel Appointment"
+              sequence="2"/>
+</odoo>
+
+

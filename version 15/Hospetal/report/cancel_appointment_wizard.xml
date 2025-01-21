@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_cancel_appointment_id_wizard">
+        <!-- <t t-foreach="docs" t-as="o"> -->
+        <!-- Note: if adding for condition without calling data from docs (model), at printing pdf you will face an error [Document is empty] -->
+        <t t-call="web.html_container">
+            <!-- t-call: is an attribute at template to store (loads an existing) and response what type of reusable code at template, in this case will stor (web.html.container)
+                 web.basic_layout: This template, created by Odoo Env, defines a base container for HTML reports. It includes necessary HTML tags, CSS, and JavaScript libraries to structure the report
+                 Note:- at (web.basic_layout) Error at pdf file as Cancel Appointment Wizard(13) -->
+            <t t-call="web.external_layout">
+                <!-- web.external_layout:- This is a predefined template provided by Odoo, commonly used for the external layout of reports that includes the standard structure for reports, such as the company logo, address, header, footer, and other details.               -->
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="text-center">
+                        <h4 style="font-weight: bold;">Cancellation Details</h4>
+                    </div>
+                    <table class="table table-sm o_main_table" name="cancellation_details">
+                        <tr>
+                            <td>
+                                <strong>Appointment ID:</strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    <t t-if="form_data.get('appointment_id')">
+                                        <t t-esc="form_data['appointment_id'][1]"/>
+                                        <!-- Note: We write [1] not [2] cuz at {'appointment_id': (24, 'AP00024')} there is (0 = 23) and (1 = 'AP00024'), So [2] = Error ('bool' object is not subscriptable) -->
+                                    </t>
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Reason :</strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    <t t-if="form_data.get('reason')">
+                                        <t t-esc="form_data['reason']"/>
+                                    </t>
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Cancellation Date :</strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    <t t-if="form_data.get('date_cancel')">
+                                        <t t-esc="form_data['date_cancel']"/>
+                                    </t>
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="text-center">
+                        <h4 style="font-weight: bold;">Some OF Patient Information</h4>
+                    </div>
+                    <table class="table table-bordered mt32">
+                        <thead>
+                            <tr>
+                                <th name="th_name" calss="text-left">
+                                    <span>Name:</span>
+                                </th>
+                                <th name="th_appointment_id" calss="text-left">
+                                    <span>Appointment ID:</span>
+                                </th>
+                                <th name="th_gender" calss="text-left">
+                                    <span>Gender:</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <t t-foreach="appointments" t-as="line">
+                            <tr>
+                                <td>
+                                    <span t-esc="line['patient_id'][1]"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['appoint_id']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['gender']"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+

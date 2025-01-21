@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_patient_tree_view" model="ir.ui.view">
+        <field name="name">view.patient.tree.view</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree export_xlsx="0">
+                <!-- tree :- means the tree view (the page that will appear all the patients at the system )                -->
+                <!-- export_xlsx="0":- that means this tree will be without button download exel sheet (Export All button)   -->
+                <field name="ref" optional="hide"/>
+                <!-- at the previous tage I select ref field to appears at tree view
+                     optional="hide" :- to you can choose from the three dots on the left of the page whether the field is visible or not. -->
+                <field name="name" string="Patient Name"/>
+                <field name="appointment_count" sum="Total Appointment"/>
+                <!-- calling (appointment_count) then sum it all and when refers to total number It will appear hint (Total Appointment)  -->
+                <field name="age" avg="Average Age"/>
+                <field name="gender"/>
+                <field name="tags_ids" widget="many2many_tags" options="{'color_field':'color_of_tag'}" optional="hide"/>
+                <!-- widget="many2many_tags" : Specifies the widget to use for displaying the field To take the clear form in the UI.
+                     options: Specifies additional options for the many2many_tags widget. Indicates the field in the related model that defines the color of each tag, In this case, color_of_tag is the name of the field in the related model. -->
+            </tree>
+        </field>
+    </record>
+    <record id="view_patient_search" model="ir.ui.view">
+        <field name="name">view.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- search:- It means that I will control the fields that appear in the search bar. -->
+                <field name="name" string="Patient Name"
+                       filter_domain="['|', ('name', 'ilike', self), ('age', 'ilike', self)]"/>
+                <!-- filter_domain => A condition to give you the freedom to search between the name or age (name | age)               -->
+                <field name="age"/>
+                <field name="gender"/>
+                <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+                <!-- To add a filter at search bar named "Male" that when select "Male" will return a condition (domain) -->
+                <!-- domain => it`s a condition to select (appear) only patients that at gender field = male -->
+                <filter name="filter_female" string="Female" domain="[('gender','=','female')]"/>
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+                <!-- <separator/>-->
+                <!-- separator => use this tag to draw line at filter button -->
+                <!-- <filter name="filter_kid" string="Kid" domain="[('age','&lt;=',5)]"/>-->
+                <group expand="0" string="Group By">
+                    <!-- group => To create grouping conditions -->
+                    <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                    <!-- 1st condition at Group By button to grouping all male patients alone and all female patients alone                  -->
+                    <!-- <filter string="Age" name="group_by_age" context="{'group_by':'age'}"/>-->
+                </group>
+                <searchpanel>
+                    <!-- searchpanel :- To create the bar on the right                   -->
+                    <field name="gender" icon="fa-user" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">view.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- form :- means the form view (the page that will appear for each patient individually )                 -->
+                <sheet>
+<!--                    the below div related to smart buttons (129)-->
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_appointments" icon="fa-star">
+                            <field string="Appointments" name="appointment_count" widget="statinfo"/>
+<!--                            name:- filed computed num of app by read_group that related to patient-->
+                        </button>
+                    </div>
+<!--                    the below div related to alert at patient Birthday  (122) -->
+                    <div class="alert alert-info text-center o_form_header" role="alert"
+                         attrs="{'invisible':[('is_birthday','=',False)]}">
+<!--                        if i change info to warning color of alert change from blue to orange -->
+                        <!-- attrs => add condition if (is_birthday) = False the alert will not appear  -->
+                        <a class="close" data-dismiss="alert" href="#">x</a>
+<!--                        to make close mark (x) at the top of the aleart -->
+                        <div>
+                            <strong>Today is Birthday !</strong>
+                        </div>
+                        <div>Wish <field name="name" readonly="1"/>
+                        </div>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <!-- class="oe_avatar" => to make image appears at the top of the sheet on the right -->
+
+                    <!-- The below div to create title view to 2 fields "ref" and "name" -->
+                    <div class="oe_title">
+                        <h4>
+                            <!-- h4 => size tage -->
+                            <field name="ref"/>
+                        </h4>
+                        <h2>
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <!-- label for="name" => add condition at field name ,class="oe_edit_only" => field name "Name" will appear only at edit state -->
+                            <field name="name"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+<!--                            <field name="appointment_count"/>-->
+                            <field name="is_birthday" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="gender" invisible="context.get('hide_gender')" widget="radio"/>
+                            <!-- widget="radio":- in an Odoo view renders a field as a radio button group in the UI. selection button-->
+                            <field name="tags_ids" widget="many2many_tags" options="{'color_field':'color_of_tag'}"/>
+                            <!-- tags_ids=> field many2many that related between patient model and patient_tags model
+                                 widget="many2many_tags" => This widget will make the names of the tags appear as the tags view (Oval shape) in the patient_tags model.
+                                 options="{'color_field':'color_of_tag'} => add additional options for the many2many_tags widget that make the color of the tag shown here is the same as its color at patient_tags model (57)-->
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Other Information" name="other_info">
+                            <field name="parent" attrs="{'invisible':[('age','>=',18)]}" />
+                            <!-- attrs:- is a dictionary key in XML that allows you to apply conditional formatting to fields in Odoo views with a key (invisible) value [('age','>',18)] => when age > 18 make parent filed invisible
+                                 can add more conditions as [('age','>',18),('gender','=','male')]  (89=>91)-->
+                            <field name="marital_status" attrs="{'invisible':[('age','&lt;',18)]}"/>
+                            <field name="partner_name" attrs="{'readonly':[('marital_status','!=','married')],'invisible':[('age','&lt;',18)],'required':[('marital_status','=','married')]}"/>
+                        </group>
+                        <group string="Personal Information" name="personal_info">
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="website" widget="url"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hospital_patient" model="ir.actions.act_window">
+        <field name="name">Patient</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">
+            {
+            'default_gender':'male'
+            }
+            <!-- when create a new patient by default gender field will = male           -->
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Patient
+            </p>
+        </field>
+        <!-- If no patients created appears image = class and text = Create New Patient -->
+    </record>
+
+
+    <menuitem id="patient"
+              action="action_hospital_patient"
+              parent="patient_detalis"
+              name="Patient"
+              sequence="0"/>
+</odoo>
+
+

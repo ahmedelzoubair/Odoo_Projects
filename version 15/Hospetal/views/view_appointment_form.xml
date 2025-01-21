@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The below record to add a function at action button at tree view (125) -->
+    <record id="action_mark_as_done" model="ir.actions.server">
+        <!-- model:- table that save all actions functions created at the system -->
+        <field name="name">Mark As Done</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hospital_appointment"/>
+        <field name="binding_view_types">list</field>
+        <!-- binding_view_types:- to create function (Mark As Done) at action button at tree view, Note:- if change list with form the function will appear at form view-->
+        <field name="state">code</field>
+        <!-- state:- to set type (Action To Do) is (Executed Python Code)-->
+        <field name="code">
+            for record in records:
+                if record.state == 'in_consultation':
+                    record.action_donee()
+            # selected records at UI will be receiving id inside records variable
+            # action_done():- related to method at the related model
+        </field>
+    </record>
+    <record id="view_appointment_form_out" model="ir.ui.view">
+        <field name="name">view.appointment.form.out</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state=='done'" decoration-danger="state=='cancel'"
+                  decoration-warning="state=='in_consultation'" decoration-info="state=='draft'"
+                  sample="1" multi_edit="1">
+                <!-- decoration-success:- The whole row takes the same color (green cuz -success) where a condition ("state=='done'") (37) -
+                     multi_edit="1"=> to can make edit at more thane one row
+                     sample="1" => is used to display sample data when no actual records are available.-->
+                <header>
+                    <!-- The below button will appear at the tree view when select any row -->
+                    <button name="action_in_consultation" type="object" string="In Consultation" class="oe_highlight"/>
+                </header>
+                <field name="appoint_id" optional="hide" readonly="True"/>
+                <field name="patient_id" optional="hide" decoration-it="1" />
+                <field name="appointment_date" decoration-bf="1"/>
+                <!-- decoration-bf="1" make filed bold at tree view -->
+                <field name="activity_ids" widget="list_activity"/>
+                <!--  to add functionality of the Schedule activity at the tree view -39- -->
+                <field name="priority" optional="hide" widget="priority"/>
+                <!--   widget="priority":- To make the priority shape like stars -40- -->
+                <field name="doctor_id" widget="many2one_avatar_user"/>
+                <!-- "doctor_id":- name of many2one field get the names of doctors
+                      widget="many2one_avatar :- get the pic of the doctor
+                      widget="many2one_avatar_user" :- on click at image chatting room will open (41 meats)-->
+                <field name="state" widget="badge"
+                       decoration-success="state=='done'"
+                       decoration-info="state=='draft'"
+                       decoration-danger="state=='cancel'"
+                       decoration-warning="state=='in_consultation'"/>
+                <button name="action_donee" type="object" class="fa fa-check-square btn-success"
+                        attrs="{'invisible':[('state','!=','in_consultation')]}"/>
+                <!-- To create smale button at tree view to change state of the appointment to done (94)
+                      fa-check-square :- The button shape remains correct.
+                      btn-success:- green color
+                      Note:- we remove "string" attribute So the button appears without a name (shape and color as UI) -->
+                <button name="action_cancel" type="object" class="fa fa-times btn-danger"
+                        states="draft,in_consultation"
+                        context="{'default_reason': 'txt from cancel button of the tree view'}"/>
+                <groupby name="patient_id">
+                    <!-- <groupby> when make group by patient I will see 2 buttons next to the patient's name. (96)
+                           name="patient_id":- Specifies the type of field on which the operation will be based. Note:- field must be Many2one related fields -->
+                    <!-- 1st button -->
+                    <button name="action_test" string="Click Me" type="object" class="oe_highlight"/>
+                    <!-- 2nd button -->
+                    <button name="edit" string="Edit" type="edit"/>
+                    <!--  type="edit" :- A type of button that lets you open the edit form view directly (96) -->
+                </groupby>
+                <field name="progress" widget="progressbar"/>
+                <!-- widget="progressbar":- to make progress filed as a loading bar and The numbers are in percentage.  -->
+            </tree>
+        </field>
+    </record>
+    <record id="view_appointment_search" model="ir.ui.view">
+        <field name="name">view.appointment.search</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="patient_id" string="Patient Name"/>
+                <field name="state" string="State Name"/>
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <!-- expand="1" => when open page the below Group By will open automatically -->
+                    <filter name="group_by_gender" string="Patient" context="{'group_by':'patient_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_appointment_form" model="ir.ui.view">
+        <field name="name">view.appointment.form</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_consultation,done"/>
+                    <!-- options=> dictionary key "clickable" value "1" means that i can click on statusbar options ,
+                         statusbar_visible=> the state will appears at bar (draft, in_consultation and done)-->
+                    <button name="action_in_consultation" type="object" string="In Consultation" class="oe_highlight"
+                            attrs="{'invisible': [('state', 'in', ['done', 'in_consultation','cancel'])]}"/>
+                    <button name="action_donee" type="object" string="Done" class="oe_highlight"
+                            attrs="{'invisible':[('state','=','draft')]}"/>
+                    <button name="%(action_cancel_appointment)d" type="action" string="Cancel"
+                            context="{'default_reason': 'txt from cancel button of the form view','hide_appointmentField':1}"/>
+                    <!-- context="{'default_reason'}:- context in Odoo is a dictionary that provides additional information to views, that mean when click this button will add to reason field at cancel_appointment model the previous text
+                         'hide_appointmentField':1 : create variable on the fly named "hide_appointmentField" with value = 1, so at cancel_appointment `model if I add invisible="context.get('hide_appointmentField') the field will be invisible. (79)-->
+                    <!-- Note: type="action" :- means that when click button will open page (menuitem) that contains "action_cancel_appointment"                  -->
+                    <button name="action_go_whatsapp" type="object" string="Whats`app Msg" class="oe_highlight" icon="fa-whatsapp"/>
+                </header>
+                <sheet>
+                    <div>
+                        <h2>
+                            <field name="priority" widget="priority"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="appoint_id"/>
+                            <field name="patient_image" invisible="1"/>
+                            <field name="patient_age" invisible="1"/>
+                            <field name="patient_id" default_focus="1" widget="selection"/>
+                            <!--   default_focus="1" As soon as you open the page, the cursor goes to that field
+                                   widget="selection":- To remove the create option -->
+                            <field name="doctor_id" widget="many2one_avatar_user"/>
+                            <field name="appointment_date"/>
+                            <field name="operation"/>
+                            <field name="duration"/>
+<!--                            this field will computed auto as calendar view  -->
+                            <field name="active" invisible="1"/>
+                            <button name="action_go_to_patient" string="Go To The Patient" type="object"
+                                    class="oe_highlight" confirm="Are u sure go to patient?"/>
+                            <!--   confirm:- msg will appear when click the button  -->
+                            <button name="action_test_url" string="Open URL" type="object"
+                                    class="oe_highlight" confirm="Run action_test def (URL Action) ?!"/>
+                        </group>
+                        <group>
+                            <field name="hide_seals_price" groups="base.group_no_one"/>
+                            <!-- groups="base.group_no_one" => field will appear at debug mode only -->
+                            <field name="ref" readonly="1" force_save="1"/>
+                            <!-- force_save="1":- same functionality of store=True (at hospital.patient model)  -->
+                            <field name="gender" readonly="False"/>
+                            <field name="tag_id" widget="many2many_tags" options="{'color_field':'color_of_tag'}"/>
+                            <button name="action_notification" string="Notifications Button" type="object" class="oe_highlight" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Progress" name="progress">
+                            <!--  <field name="progress" widget="gauge"-->
+                            <!-- options="{'style': 'width:160px; height: 120px;'}"/>  (126) -->
+                            <field name="progress" widget="percentpie"/>
+                        </page>
+                        <page string="Prescription" name="Prescription">
+                            <field name="prescription"
+                                   options="{'collaborative':true, 'resizeable':true, 'codeview':true}"/>
+                            <!--   collaborative:- that when I write in this field, it will be heard directly by the rest of the users.
+                                   resizeable:- to I can control the size
+                                   codeview:- To show the HTML code -->
+                        </page>
+                        <page string="Pharmacy" name="Pharmacy">
+                            <!-- How to show One2many relation in form view -->
+                            <field name="appointment_pharmacy_lines_ids">
+                                <!-- appointment_pharmacy_lines_ids :- the dah One2many relation field-->
+
+                                <!--                                <form editable="bottom">-->
+                                <!--                                    &lt;!&ndash; el form view hena mesh hatzhr bass lazm 23mlha create 3shan dah el main page bass ba5aleha hide we 2shta3`al men 3ala tree view-->
+                                <!--                                         ya3ni lo shelt el tree haytl3 popup view lel form bass lo shelt el form erorr&ndash;&gt;-->
+                                <!--                                    <group>-->
+                                <!--                                        <field name="product_id"/>-->
+                                <!--                                        <field name="price"-->
+                                <!--                                               attrs="{'column_invisible': [('parent.hide_seals_price', '=', True)]}"/>-->
+                                <!--                                        &lt;!&ndash; add lel line fe tree we form 3shan homa related beba3d&ndash;&gt;-->
+                                <!--                                        <field name="quantity"/>-->
+                                <!--                                        <field name="appointment_datee" optional="hide"/>-->
+                                <!--                                    </group>-->
+                                <!--                                </form>-->
+                                <tree editable="bottom">
+                                    <!-- editable="bottom" => to I can change every attribute from within the tree view -->
+                                    <field name="product_id"/>
+                                    <field name="price"
+                                           attrs="{'column_invisible': [('parent.hide_seals_price', '=', True)]}"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <!-- attrs:- is a dictionary at odoo related to add behaviors to the field,
+                                         column_invisible:- related to a (invisible condition) to the column at One2many relation field,
+                                         parent:- related to (hospital.appointment) model,
+                                         hide_seals_price:- Boolean field at parent model  {51}
+                                         widget="monetary":- add this widget cuz price is field.Float and I need to appear currency at UI {132}
+                                         options="{'currency_field': 'currency_id'}:- option is a dictionary to specify type of the field at XML
+                                         means: currency_field will get it`s currency from currency_id, color_field of the tage from filed color_of_tag
+                                         field_digits': True => make digits attribute of python field to works (155) -->
+                                    <field name="quantity"/>
+                                    <field name="currency_id" invisible="1" groups="base.group_multi_company"/>
+<!--                                    groups="base.group_multi_company":- Who added to this group can see this field currency_id -->
+                                    <field name="price_subtotal" groups="base.group_multi_currency"/>
+<!--                                    Note:- I did`t add widget="monetary" like price field cuz price_subtotal is (fields.Monetary) actually -->
+                                    <field name="appointment_datee" optional="hide"/>
+                                    <!-- FYKI appointment_datee filed at appointment_lines model not appointment -->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hospital_appointment" model="ir.actions.act_window">
+        <field name="name">Appointment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">tree,form,calendar,activity</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create 1st Appointment
+            </p>
+        </field>
+    </record>
+<!--el record 2ele ta7t 3shan add activity view   -->
+    <record id="view_patient_activity" model="ir.ui.view">
+        <field name="name">view.patient.activity</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <activity string="Appointment">
+                <!--                el activity de view zay el list we ma7tota as icon clock gamb icnon el list
+                                     de byzher feha el to-do 2ele marbota be koll appointment (59)
+                                     string="Appointment"=> el name 2ele hayzhr 2awel matft7 activity page 3ala el shemal fo2-->
+                <field name="patient_id"/>
+                <!--                da field 2ele rabt el appointment be patient 2ele bygeb meno data patient,
+                                    we lo dost 3ala sora hayzr gender fe 7ala 2n _rec_name = gender (59)-->
+                <!--                note:- ana lo 3`ayrt el name le 2ee field tane erorr-->
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('hospital.patient', 'image', record.patient_id.raw_value)"
+                             t-att-title="record.patient_id.value"
+                             t-att-alt="record.patient_id.value"/>
+                        <!-- el 'hospital.patient' 3shan 2ageb meno image we el ba2e el hendi mesh fahmo :D-->
+                        <div>
+                            <field name="ref"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+<!-- el record dah 3shan 23arf el calendar gowa appointment (127) -->
+    <record id="calendar_hospital_appointment" model="ir.ui.view">
+        <field name="name">calendar.hospital.appointment</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <calendar string="Hospital Appointment" date_start="appointment_date" date_delay="duration"
+                      color="state" mode="month" quick_add="False" hide_time="True"
+                      form_view_id="%(Hospetal.view_appointment_form)d" event_open_popup="True" event_limit="3">
+<!--                date_start:- dah bada5l fe filed no3o date we 3ala 2asaso basgl fe el calendar ma2a3ed el appo
+                    date_delay="duration" :- dah 3shan lama 23ml expand le appointment (ya3ni lo app hata5od 2kter men youm)
+                    mode="month":- dah 3shan lama 2ft7 calender yb2a defult view is month
+                    color="state":- change colore of app at calender as per state
+                    quick_add="False":- to remove to create app from calender view, Note:- when click at day will open new app with the date u click on it from the calender
+                    hide_time="True":- when click at the app from calender time of app invisible
+                    event_open_popup="True":- 3shan el app tezher as a popup view not open the form view
+                    event_limit="3":- the max app will be show is 3-->
+                <field name="patient_id" filters="1" avatar_field="image"/>
+<!--                when at field here will show when click at the app from calender
+                    filters="1":- add at right side a filter with patient state
+                    avatar_filed="image":- add image of the patient
+                    form_view_id= :- 3shan lo 3andi 2aktr men form view 2a7add 2anhi wa7da fohom by id -->
+                <field name="state" invisible="1" filters="1"/>
+<!--                Note:- if remove invisible the state will show when click at the app from calender -->
+            </calendar>
+        </field>
+    </record>
+
+    <menuitem id="appointment"
+              action="action_hospital_appointment"
+              parent="appointment_main_menu"
+              name="Appointment"
+              sequence="0"/>
+</odoo>
+
+

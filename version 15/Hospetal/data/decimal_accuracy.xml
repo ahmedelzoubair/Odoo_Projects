@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The below to create new decimal precision and new user  -->
+    <data>
+        <!-- noupdate='1' => attribute is used in XML files to specify that the records inside the <data> tag should not be updated when the module is upgraded.  (136 NoUpdate Attribute In Odoo || ForceCreate Attribute In Odoo || Odoo Noupdate and Forcecreate) -->
+        <record id="product_price_of_appointment" model="decimal.precision">
+            <!-- The record is related to create a new Decimal Accuracy with named (Product Price Of Appointment) with 4 (digits)  -->
+            <field name="name">Product Price Of Appointment</field>
+            <!-- settings => Technical (menu) => Decimal Accuracy) -->
+            <field name="digits">5</field>
+            <!-- as pear noupdate='1', if change digits to (4) when update model digits will not change to (5) -->
+        </record>
+
+        <!-- the below record to create new group at User Groups, AND will add by default at users Access Rights
+             when i create group her when install model the group will created by default  -->
+        <record id="group_hide_price_unit" model="res.groups">
+            <!-- model="res.groups" => model that save all groups (settings => Users & Companies (menu) => Groups) -->
+            <field name="name">Hide Price Unit</field>
+        </record>
+
+        <!-- The below record to create new user -->
+        <record id="ahmed_elzoubair_user" model="res.users">
+            <field name="name">Ahmed EL Zoubair</field>
+            <field name="login">ahmedelzoubair</field>
+            <field name="id">10</field>
+            <!-- Note: i can`t fixed id by previous way, So refer to (hospital.patient) model to know who to
+             access user id -->
+            <field name="groups_id" eval="[(4, ref('group_hide_price_unit'))]"/>
+            <!-- The 4 in the tuple means "add to the existing list of groups." -->
+        </record>
+        <record id="ahmed_sayed_user" model="res.users">
+            <field name="name">Ahmed Sayed</field>
+            <field name="login">ahmedsayed</field>
+            <field name="groups_id" eval="[(4, ref('group_hide_price_unit'))]"/>
+            <!-- The 4 in the tuple means "add to the existing list of groups." -->
+            <!--  To make the price_unit field in the sale.order.line model invisible for users who belong to the group_hide_price_unit group
+                  1) You need to inherit form view of the sale.order.line model to add a condition that hides the price_unit field for users in the group_hide_price_unit group.
+                       <field name="price_unit" position="attributes">
+                            <attribute name="attrs">{'invisible': [('hide_price_unit', '=', True)]}</attribute>
+                       </field>
+                  2) You need to add a computed Boolean field (hide_price_unit) to the sale.order.line model.
+                  hide_price_unit = fields.Boolean( string="Hide Price Unit", compute="_compute_hide_price_unit",store=False)
+
+                  def _compute_hide_price_unit(self):
+                        # Check if the current user belongs to the 'group_hide_price_unit' group
+                        group = self.env.ref('Hospetal.group_hide_price_unit', raise_if_not_found=False)
+                        if group:
+                            for line in self:
+                                line.hide_price_unit = self.env.user in group.users
+                        else:
+                            for line in self:
+                                line.hide_price_unit = False
+<!-                                -->
+        </record>
+
+    </data>
+</odoo>

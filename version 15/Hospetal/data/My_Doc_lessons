@@ -1,0 +1,818 @@
+how to create new model (67)
+------------------------------
+@terminal
+cd odoo
+# enter odoo file
+ls
+# show the all folders at my location
+./odoo-bin scaffold image_field_at_so /home/ahmed/odoo17/Custom_addons
+# ./odoo-bin => at odoo-bin python file run code (scaffold)
+# scaffold => responsible for make a standard new project
+# image_field_at_so => project name
+# /home/ahmed/odoo17/Custom_addons => the path that will add project in
+---------
+how to inherit model (68)
+------------------------------
+for ex:- i will inherit sales model
+1-@website open model at debuger click on (Edite View:list) get name of model (sale.order)
+2-@python => inherit model (om_odoo_inheritence)
+@ main __manifest__.py => 'depends': ['sale']
+@ models file change create model named (sale_order.py)
+@ models file => __init__.py import sale_order.py
+@ models file => sale_order.py refer to file
+---------
+How To Inherit And Add Field To A Model In Odoo (69)
+------------------------------
+when create any variable @ (sale_order.py) hatla2eh add @ (sale.order) database
+@ inherit model (om_odoo_inheritence) => models => (sale_order.py) create variable (confirmed_user_id)
+to add (confirmed_user_id) @ sales => Quotations
+1:- @ inherit model (om_odoo_inheritence) => views => create (sale_order_view.xml)
+2:- @ __manifest__.py 'data':[sale_order_view.xml]
+@ sale_order_view.xml
+1:- @website go to place that u need to add field
+=> debug => (Edite View:Form) => External ID : sale.view_order_form :- dah el External ID lel form view 2ele 2nta wa2f feha
+2:- we need to inherit el form 2ele fatet gowa (sale_order_view.xml) 3shan 23rf add gowaha el field (confirmed_user_id)
+a) we anta fet7 (Edit View: Form) hatla2e tab 2smaha (Inherited Views) doll views inherited men sale.order 2od5ol 3ala 2awel view copy Extr id search @odoo taraaa :D
+---------
+How To Inherit A Function In Odoo (70)
+------------------------------
+ana ha inherit func 3shan for ex.. button el confirm fe el sales badl mayml 7aga w7da y3ml 7gten
+refer to (om_odoo_inheritence) => models => (sale_order.py)
+---------
+How To Override Create Method In Odoo (71)
+------------------------------ Method is associated with an object, while a function is not.
+lama 2age 23ml crete to new (SO,PO,patient,ex...) fe button (save) dah ma3molo func gowa odoo library fa ha3ml zay darss 2ele fate hageb el method we 2azawed 3aleha
+refer to (Hospetal) => models => (patient.py)
+------------------------------
+How To Run Odoo From Terminal (after 76)
+---------
+How To Generate Odoo Configuration File From Terminal
+---------
+How To Install Module and create database From Terminal In Odoo
+---------
+Error no 98 Address Already In Use Error Odoo and how kill odoo process
+---------
+How To Upgrade A Module From terminal
+---------
+How To Create Database From Terminal
+---------
+Menu And SubMenu Without Specifying Parent In Odoo (76)
+---------
+Odoo Environment (after 77)
+---------
+How to add buttons at tree view (94)
+-----------------------------------------
+https://fontawesome.com/v4/icon/check-square:- dah website to get 2shkal el class
+---------
+Error (97)
+------------------------------
+http://localhost:8015/web/database/manager :- open the databases link
+how to clear history:-
+right click => history
+delete browsing data
+select (browsing history, cached images and files)
+---------
+How to add setting to module (98)
+----------------------------------------
+How to get the menuitem:
+1) settings
+2) Technical menu
+3) Menu Items
+4) search with the name of the tab that u want to get a new page under it for ex:- configuration
+5) select configuration that related to for ex:- Hospital 7amada/Configuration
+6) press debugger
+7) select View Metadata
+8) at (XML ID:) the id of the menuitem for ex:- Hospetal.configuration => add the XML ID at parent of menuitem the view will get under the tree (<menuitem parent="Hospetal.configuration"... )
+Note:- at Menu Items Hospital 7amada/Configuration down at <notebook> => <page name="Submenus"> => all the Submenus that get under pearent configuration
+
+How to get (ir.config_parameter) model:
+1) settings
+2) technical menu
+3) System Parameters
+---------
+How To Set Inverse Function For Computed Field In Odoo (99)
+---------------------------------------------------------------
+at patient model (age) filed is compute that can`t be add in this video we will make the filed can be edite and when i add number at filed callulate the date
+---------
+How To Hide User Group From Users Form View In Odoo || Remove User Group From Users Form View (117)
+--------------------------------------------
+at settings => users&companies => users => list of (Technical) that located at users&companies => groups
+ha2dr 2a2ol men yeshof anhi access a7a :D
+---------
+Server Action In Odoo || Add Action To Action Button In Odoo (125)
+--------------------------------------------
+add functions at action button
+1) Settings => Technical => Server Actions
+2) create, Name = (Mark As Done), Model = (Hospital Appointment), Action To Do = (Executed Python Code)
+3) at <notebooke> Python Code <page>
+for record in records:      => for loop to calling all records that selected at model (Hospital Appointment) note:- selected records be receiving id inside records variable
+    record.action_done()    => koll record gebto nafz 3aleh method 2ele 2smaha (action_done)
+4) save
+5) Create Contextual Action
+---------
+Calendar View In Odoo (127)
+------------------
+Basics Of PostgreSQL Query || Odoo Queries || PSQL Insert, Update, Select and Delete Queries (131) go to (171)
+------------------
+@Terminal
+1) sudo su postgres # switching to postgres user
+2) psql
+3) \c database_name # connecting to the database
+4) select name from hospital_patient (enter to get all names at DB)
+select name from hospital_appointment limit 5 => get the 1st 5 elements
+select ha.patient_id, ha.patient_name from hospital_appointment ha left join hospital_patient hp ON (hp.id = ha.patient_id)
+ha.patient_id, ha.patient_name:- (ha) alias [esm mosta3ar], (patient_id) id:- field gowa
+select name, date_of_birth from hospital_patient order by id (desc) => get the data incremental with id (descending)
+select name, date_of_birth from hospital_patient where gender='male' order by id => get data with condition gender = male
+update hospital_patient set name='New name' where id=63 => change name of record id 63
+update hospital_patient set gender='female' where id=63 => female is a key of gender field at python code
+update hospital_patient set gender='female' where gender='male' => this where will change all male to female
+insert into hospital_patient (name,active) values ('Test Record',True) => add new record at hospital_patient database with name and active is ...,...
+delete from hospital_patient where id=67 => delete record
+delete from hospital_patient where name='ahmed sayed' => delete record
+----------------------------------------
+Monetary Field And Widget Monetary (132)
+----------
+at general settings (Currency) can change el 3omla
+
+how to get groups name:
+settings=> Groups=> select Group => depuger => View Metadata
+----------------------
+How To Change Order Of Tracking Values In Odoo (134)
+---------------
+ticnical=> model => at any field track => attribute Enable order tracking:- dah 2ele beyt7add feh trteb el track
+----------------------------
+Customize PDF Reports From User Interface In Odo (138)
+---------------
+To add my field confirmed_user_id (om_odoo_inheriteence) at report
+1st:-
+Go to settings => Technical menu => Reports => search (Quotation) => select (sale.order) model => smart button (QWeb views)
+=> When open main templet (sale.report_saleorder)
+<?xml version="1.0"?>
+<t t-name="sale.report_saleorder">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+            # t-call="sale.report_saleorder_document" => call the report with External ID :- sale.report_saleorder_document
+        </t>
+    </t>
+</t>
+
+2nd:-
+Select any inherit report like (report_saleorder_document_inherit_sale_stock) => Action button => Duplicat
+1:- View Name :- report_saleorder_document_confirmed_user_id , Note:- name must be start with (report_saleorder) cuz the main templet named (sale.report_saleorder) so when press at smart button (QWeb views) can see your inherited report
+2:- View Type :- QWeb
+3:- Inherited View :- report_saleorder_document
+4:- View inheritance mode :- Extension View , Note:- Extension View cuz it is inherited report AND (Base view) for a new report
+
+<?xml version="1.0"?>
+<data inherit_id="sale.report_saleorder_document">
+    # To get the right xpath will open the main inherited report (sale.report_saleorder_document) search with name field (Salesperson) we will see that field at <div class="row mt32 mb32" id="informations">
+    <xpath expr="//div[@id='informations']//div[last()]" position="after">
+    # div[last()] => target the las div at the main div (div[@id='informations'])
+       <div t-if="doc.confirmed_user_id" class="col-auto col-3 mw-100 mb-2">
+       # t-if :- it is (if condition) at xml report. that means if (doc.confirmed_user_id) field not none add the below <strong and paragraph> tags, if not don`t do anything
+       # doc :- is the element that used by foreach statement to can target the fields at docs
+         <strong>Confirmed User:</strong>
+         <p class="m-0" t-field="doc.confirmed_user_id"/>
+         # t-field="doc.confirmed_user_id" :- u put add t-field the value that i need to view
+       </div>
+    </xpath>
+</data>
+
+--------------------------------------------------------------------------------------------------------------
+
+Odoo ORM Method | Odoo ORM Methods (139)
+---------------
+The previous methods used at python file, To target those methods we need to access (env)
+
+1- Create Method:- create new record and path some data
+-------
+1:-
+self.env['hospital.patient'].create({'name': 'New Patient Name', 'email':'ahmed@gmail.com'}) => Execute :- hospital.patient(71,) [71 is the id of the new patient]
+2:-
+vals =  {'name': 'New Patient Name', 'email':'ahmed@gmail.com'}
+self.env['hospital.patient'].create(vals)
+
+2- Browse (fetch) Method:- Target a certain record and bring data
+---------------
+1:-
+self.env['hospital.patient'].browse(51) => hospital.patient(51,) [means it get patient with id 51]
+self.env['hospital.patient'].browse(51).name => Ahmed Sayed
+2:-
+self.env['hospital.patient'].browse([51,72]) => hospital.patient(51,72) [means it get patient with ids 51 and 72]
+self.env['hospital.patient'].browse([51,72]).mapped('name') => ['Ahmed Sayed','Sabri']
+[means of the mapped method]
+patients = self.env['hospital.patient'].browse([51,72])
+for patient in patients:
+print(patient)
+3:-
+self.env['hospital.patient'].browse(51).exists() => if true will return (hospital.patient(51,)) if not (hospital.patient())
+
+3- Write: Method:- Edit a certain record
+------
+self.env["hospital.patient"].browse(17).write({'name':'ahmed sayed', 'email':'ahmed@gmail.com'}) => True AND the patient name and email will be change
+
+4-Unlink (delete) Method:-
+------
+self.env["hospital.patient"].browse(17).unlink => True And the patient will be delete
+
+5- Search Method:- get the records
+-------
+1) self.env["hospital.patient"].search([]) => hospital.patient(4, 5, 6, 12, 14, 15, 16, 18, 19, 20, 27, 28, 35) , the numbers is the patient id
+2) self.env["hospital.patient"].search(args=[]) => same like previous and (args) refer to arguments
+3) self.env["hospital.patient"].search([('gender','=','male')]) => hospital.patient(4, 5, 12, 14, 15, 18, 19, 20, 27)
+4) self.env["hospital.patient"].search([('gender','=','male')]).name => Error (BUT) self.env["hospital.patient"].search([('id','=',4)]).name => Ahmed sayed
+5) self.env["hospital.patient"].search([('gender','=','male') , ('id','=',2)]) => hospital.patient() cuz no male patient has id 6
+6) self.env["hospital.patient"].search(['|',('gender','=','male') , ('id','=',2)]) => hospital.patient(4, 5, 12, 14, 15, 18, 19, 20, 27) , all data male or id = 2
+7) self.env["hospital.patient"].search([], limit=2) => hospital.patient(4, 5) , limit=2 :- get the 1st two records only
+8) self.env["hospital.patient"].search([], limit=2, order='id desc') => hospital.patient(35, 28) , order='id desc':- will get the last 2 ids
+
+6-  Search Count Method:- count records
+------
+1- self.env["hospital.patient"].search_count([('gender','=','female')]) => 4 , is the number of female patient
+2- self.env["hospital.patient"].search_count([('gender','=','female'),('gender','=','male')]) => 0 , cuz there is no patient is male and female at the same time
+2- self.env["hospital.patient"].search_count(['|', ('gender','=','female'),('gender','=','male')]) => 13 , all patients
+3- self.env["hospital.patient"].search_count([('gender','=','male'),('id','=',4)]) => 1
+
+Note:- self.env["hospital.patient"].search(['|', ('gender','=','female'),('gender','=','male')], count=True) => 13 , at (search) if add argument (count=True) will change functionality to search_count
+
+7- Get Metadata Method:- inter patient view form => debugger => Metadata
+-------
+ID: (4)
+XML ID: (/)  :- cuz patient created from UI
+No Updated: .........
+1:
+self.env["patients.tags"].browse(1).get_metadata() => [{'id': 1, 'create_uid': (1, 'OdooBot'), 'create_date': datetime.datetime(2024, 9, 1, 10, 31, 44, 764993), 'write_uid': (2, 'Mitchell Admin'), 'write_date': datetime.datetime(2024, 10, 20, 9, 14, 26, 499078), 'xmlid': 'Hospetal.housewife_tag', 'noupdate': False}], most of data that related to (patients.tags) id 1
+self.env["patients.tags"].browse(1).get_metadata()[0] => get element at the list (the dictionary)
+self.env["patients.tags"].browse(1).get_metadata()[0].get('xmlid') => Hospetal.housewife_tag , get() method related to the dictionary to get the value of the key (xmlid)
+
+8- Get Fields Method:-
+-------
+1:
+self.env["patients.tags"].fields_get() => get each all fields features like {'name': {'type': 'char', 'change_default': False,...} , 'active': {'type': 'boolean', 'change_default': False,..} }
+self.env["patients.tags"].fields_get(['name', 'active']) => get (name and active) fields features only
+self.env["patients.tags"].fields_get(['name', 'active'] , ['string','type']) => {'name': {'type': 'char', 'string': 'Tag'}, 'active': {'type': 'boolean', 'string': 'Active'}}
+-------------------------------------------------------------------------------
+
+Trim Field Attribute (147)
+---------
+When add at filed Char spaces (     name      ) by default spaces will be removed, when add trim=False field will save spaces
+hint = field.Char(string="Hint", trim=False)
+-------------------------------------------------------------------------------
+
+Odoo Shell Command (148)
+--------
+Odoo Shell: is a python console from which we can interact with odoo database using odoo ORM Methods
+To access the database that i need try shell command at it
+--
+@ Terminal view of the pycharm OR Terminal of the Linux
+1:- from the Run view copy the path python environment (/home/ahmed/odoo15/venv/bin/python)
+2:- add the path of python then space ( ) then path of the bin file then space ( ) then (shell) command,  Note:- get the bin path (at ur pycharm file bin right click => copy path)
+/home/ahmed/odoo15/venv/bin/python /home/ahmed/odoo15/odoo-bin shell => Waring cuz I don`t target a certain database
+/home/ahmed/odoo15/venv/bin/python /home/ahmed/odoo15/odoo-bin shell -d database_name => Error (connection to server on socket "......" failed) cuz I don`t target a certain user and password, So to target must add the path of odoo configuration file
+/home/ahmed/odoo15/venv/bin/python /home/ahmed/odoo15/odoo-bin shell -d database_name -c /home/ahmed/odoo15/odoo15.conf
+=> env: <odoo.api.Environment object at ........> :- means Environment has been created
+=> self: res.users(1,) :- means you are locked into the system with user with id 1
+=>
+(Console)
+>>>
+
+
+Commands:
+-----
+@ Terminal
+1:- exit() => to exit shell environment
+2:- clear => to clear Terminal
+
+@ Terminal in Console (Shell Env)
+1:- self => res.user(1,)
+2:- self.name => OdooBot
+OdooBot :- this is inactive user with id 1
+3:- self.login => ___system___
+login :- is the model name of field (Email Address)
+--So now I can use all the Odoo ORM Methods (139)--
+1:- self.env.cr.commit()
+when create a new field by self.env["hospital.patient"].create({'name':'new patient'}) the patient will not until run a commit command
+2:- patient = self.env["hospital.patient"]
+created a variable named patient instead of every time write (self.env["hospital.patient"])
+--------------------------------------------------------------------------
+
+How To Pass New Field Value From Sale Order To Invoice In Odoo (149)
+---------------
+- we created new field at (om_odoo_inheriteence model) named (confirmed_user_id) so we need when created bill the confirmed_user_id apper at bill
+Let's go through the way to understand how to make it:
+
+1) At SO when click at (Create Invoice) button will appear popup view (<field name="target">new</field>) named
+(Create invoices) the method that related to button (Create and View Invoice) named (def_create_invoices(self):)
+at (sale/wizard/sale_make_invoice_advance.py) path. NOTE:- the model that related to this is popup view named (sale.advance.payment.inv)
+Some of block of code from (def_create_invoices)
+[
+    def create_invoices(self):
+        sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
+
+        if self.advance_payment_method == 'delivered':
+            sale_orders._create_invoices(final=self.deduct_down_payments)
+        else:
+            # Create deposit product if necessary
+            if not self.product_id:
+                vals = self._prepare_deposit_product()
+                self.product_id = self.env['product.product'].create(vals)
+                self.env['ir.config_parameter'].sudo().set_param('sale.default_deposit_product_id', self.product_id.id)
+]
+
+
+
+2)
+- if self.advance_payment_method == 'delivered' :- there was Selection filed named (advance_payment_method) at (sale.advance.payment.inv) model and delivered is related to (Regular invoice) choose
+- sale_orders._create_invoices(final=self.deduct_down_payments) :-
+sale_orders :- maybe related to model sale.order cuz at some cases we the name of model by change (.) to (_)
+_create_invoices :- method at sale.model model it`s Functionality for create invoice associated to the SO
+at (_create_invoices) method there is a line of code (invoice_vals = order._prepare_invoice())
+3)
+-we will inherit (_prepare_invoice) method, go to (om_odoo_inheriteence model)  then make all what i make at same model
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+How To Inherit And Add Field To One2many Field In Odoo (150)
+-------------
+Add new field at SO send to bill & delete option from access right
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Active Test In Odoo || Odoo Active Test (153)
+-------------
+- The (active_test) is a condition that add to context dic will get all records if archived or not
+self.env['hospital.patient'].with_context(active_test=False).search_count([]) => 13, 13:- is all number for patients
+- with_context() :- is a method that make you add a context (that will at default value to method active_test )
+- (active_test=False) :- make the value of the (active_test) method equal to False
+- search_count([]) :- this method regarding to count all number of records
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Decimal Accuracy In Odoo || Decimal Precision In Odoo (155)
+-------------
+Settings => Technical => Decimal Accuracy :- to get digits of numbers
+
+At pycharm => addons => sale => models => sale_prder_line.py => search (price_unite)
+price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
+digits='Product Price' => that the price_unit field is computed according to the (Product Price) at (Decimal Accuracy)
+
+BUT, price_subtotal
+Accounting => Configuration => Currencies => EGP => will see Decimal Places = 2, Note: Decimal field not editable
+price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
+To make changes at the Decimal of price_subtotal by implementation way:- change Rounding Factor field from (0.010000) to (	0.001000)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+How To Get Code From Postman Application || Postman Code Generator (158)
+-------------
+At this lesson we will learn how to integrate with anther applications
+
+To run a python code
+1) At main file of Custom_addons Right click => New => Python file
+2) Open Terminal (View => Toll Windows => Terminal)
+3) Right click at python file => copy path
+4) At terminal => python /home/ahmed/odoo15/Custom_addons/test_code.py => enter
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Basic Ubuntu Commands || Useful Ubuntu Commands (159)
+-------------
+At the place you need => right click => open terminal
+
+01) pwd :- the path of working directory
+02) ls :- will list all the files inside you directory
+03) ls -a :- will list all the files inside you directory and also hidden files
+04) ls -la :- will show some information related to the current directory (root  root       4096 Nov 12 11:25  ..) , (ahmed ahmed      4096 Oct 20 10:17  ahmed) and (ahmed ahmed 107627312 May 21 14:13  google-chrome-stable_current_amd64.deb)
+05) dir :- ls
+06) clear :- clear terminal
+07) cd :- will be back to home screen
+09) cd file_name :- inter file at the directory that located
+10) cd c :- will show all files started with c letter => and when press Tab button will write the name auto
+11) cd .. :- current path will change to previous path
+12) cat odoo.conf :- will show the content inside that file
+13) mkdir folder_name :- create new directory (folder) at the path that located
+14) rm -rf file_name/ OR rmdir file_name/ :- deleted the directory that named file_name
+15) nano new_file.py :- will create a file and open it at the terminal
+    Ctrl + x :- exit new_file.py => Note: file created with nano command deleted by (rm -rf)
+    nano existing_file :- open file and can edite in it
+16) cp odoo.conf copy_odoo.conf :- make a copy from file (odoo.conf) with a new name (copy_odoo.conf)
+17) mv copy_odoo.conf /home/dev :- will move (cut) the file from current path to the new path
+18) passwd :- change user password
+    passwd user_name :- change password of user_name
+19) ping google.com :- test connection is Stable or not
+20) hostname :- user name will be returned
+21) history :- get all Commands runs at the terminal
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Install Odoo 15 In Cloud Server || Odoo Installation Scrypt || Odoo Installation Steps (162)
+-----------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Fix Connection Lost and Connection Restored Error Odoo || Odoo Workers (163)
+-----------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+How To Enable Multi Processing In Odoo | Configure Workers In Odoo (164)
+-----------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+How To Copy Files To Remote Server Using SCP Command || Ubuntu SCP || File Transfer (165)
+-----------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+How To Setup Custom Addons Path In Odoo Server || Configure Custom Addons Path (166)
+-----------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+How To Install Third Party Modules In Odoo Instance || Install Module From Odoo App Store (168)
+------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+How To Configure Domain Name For Odoo Instance || Odoo Deployment (169)
+------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+How To Configure SSL (https://) For Domain | Enable Https For Odoo Instance | Secure Nginx with Let's Encrypt (170)
+------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Excludes Attribute In Odoo || Prevent Module Installation If Module Installed (173)
+------------
+Implementation Error:- Models 1st_model and 2nd_model are incompatible
+
+The previous error cuz at the 2nd model => __manifest__ file there is attribute named ('excludes') contains (account_account) model
+'excludes' : ['account.account']
+that means the 2nd model will not install at data base contains account model cuz the account model will make a Contrast with 1st model
+Note: change 'account.account' with 'web.enterprise' means that model will not install at enterprise database
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+How To Add New Field To Sale Report Model In Odoo || Inherit Database View In Odoo (174) refer to (138)
+------------ Note:- Add field at pivot view
+
+To get the report of Sales => Reporting => Sales => Pivot view
+addons => sale => report => sale_report.py
+
+class SaleReport(models.Model):
+    _name = "sale.report"
+    _description = "Sales Analysis Report"
+    _auto = False
+    # Means that the data will be taken from the query
+    _rec_name = 'date'
+    _order = 'date desc'
+
+    After defining some fields....
+
+3rd Step:
+# Select statement
+    def _select_sale(self, fields=None):
+        if not fields:
+            fields = {}
+        select_ = """
+            min(l.id) as id,
+            l.product_id as product_id,
+            # l => representing to sale_order_line, Note:- get it from Form statement
+
+            t.uom_id as product_uom,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_delivered / u.factor * u2.factor) ELSE 0 END as qty_delivered,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) / u.factor * u2.factor) ELSE 0 END as qty_to_deliver,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_invoiced / u.factor * u2.factor) ELSE 0 END as qty_invoiced,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_to_invoice / u.factor * u2.factor) ELSE 0 END as qty_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.price_total / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as price_total,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.price_subtotal / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as price_subtotal,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.untaxed_amount_to_invoice / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as untaxed_amount_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(l.untaxed_amount_invoiced / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as untaxed_amount_invoiced,
+            count(*) as nbr,
+            s.name as name,
+            # s => representing to sale_order, Note:- get it from Form statement
+
+            s.date_order as date,
+            s.state as state,
+            s.partner_id as partner_id,
+            s.user_id as user_id,
+            s.company_id as company_id,
+            s.campaign_id as campaign_id,
+            s.medium_id as medium_id,
+            s.source_id as source_id,
+            extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
+            t.categ_id as categ_id,
+            # t => representing to product_template, Note:- get it from Form statement
+
+            s.pricelist_id as pricelist_id,
+            s.analytic_account_id as analytic_account_id,
+            s.team_id as team_id,
+            p.product_tmpl_id,
+            # p => representing to product_product, Note:- get it from Form statement
+
+            partner.country_id as country_id,
+            partner.industry_id as industry_id,
+            partner.commercial_partner_id as commercial_partner_id,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(p.weight * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as weight,
+            CASE WHEN l.product_id IS NOT NULL THEN sum(p.volume * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as volume,
+            l.discount as discount,
+            CASE WHEN l.product_id IS NOT NULL THEN sum((l.price_unit * l.product_uom_qty * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END))ELSE 0 END as discount_amount,
+            s.id as order_id
+        """
+
+# To get the representing of all Symbols like l, s, p and t
+#Form statement
+    def _from_sale(self, from_clause=''):
+        from_ = """
+                sale_order_line l
+                      left join sale_order s on (s.id=l.order_id)
+                      join res_partner partner on s.partner_id = partner.id
+                        left join product_product p on (l.product_id=p.id)
+                            left join product_template t on (p.product_tmpl_id=t.id)
+                    left join uom_uom u on (u.id=l.product_uom)
+                    left join uom_uom u2 on (u2.id=t.uom_id)
+                    left join product_pricelist pp on (s.pricelist_id = pp.id)
+                %s
+        """ % from_clause
+        return from_
+
+# Groupby statement
+    def _group_by_sale(self, groupby=''):
+        groupby_ = """
+                l.product_id,
+                l.order_id,
+                t.uom_id,
+                t.categ_id,
+                s.name,
+                s.date_order,
+                s.partner_id,
+                s.user_id,
+                s.state,
+                s.company_id,
+                s.campaign_id,
+                s.medium_id,
+                s.source_id,
+                s.pricelist_id,
+                s.analytic_account_id,
+                s.team_id,
+                p.product_tmpl_id,
+                partner.country_id,
+                partner.industry_id,
+                partner.commercial_partner_id,
+                l.discount,
+                s.id %s
+            """ % (groupby)
+            return groupby_
+
+2nd:
+# The query that will calling through Init Query
+    def _query(self, with_clause='', fields=None, groupby='', from_clause=''):
+        if not fields:
+            fields = {}
+        sale_report_fields = self._select_additional_fields(fields)
+        with_ = ("WITH %s" % with_clause) if with_clause else ""
+        return '%s (SELECT %s FROM %s WHERE l.display_type IS NULL GROUP BY %s)' % \
+               (with_, self._select_sale(sale_report_fields), self._from_sale(from_clause), self._group_by_sale(groupby))
+
+          Note: we return _select_sale (Select statement)
+
+
+1st: Stare here
+# Init query:- it`s function will be getting executed and it will create *VIEW* in the database with sale_report
+    def init(self):
+        # self._table = sale_report
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (%s)""" % (self._table, self._query()))
+
+        # The Executing start from here and will calling _query
+        # Why calling like that, Cuz we can`t write all queries at (self.env.cr.execute("""CREATE or REPLACE VIEW %s....)
+        So if we need to inherit later we need to have rewrite all functions, so to can be easy to return odoo make as follows
+        So if I need to add field at (sale) so i will super [def _select_sale(self, fields=None):]
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Odoo External API | Authentication From External Application | Odoo External API Logging in (175)
+------------
+At odoo 15, If u need for example to connect with mobile application using java, So you will need to return to :
+https://www.odoo.com/documentation/15.0/developer/reference/external_api.html
+
+Lets take example for interact with python environment: (how to I know odoo at python file)
+---------- Note: if the environment change to HTML, JAVA, .... back to the doc
+1) Create file.py and add
+url = 'http://localhost:8015'
+db = 'test'
+username = 'admin'
+password = 'admin'
+
+2) Test database
+a) install xmlrpc,
+xmlrpc (web service, external api)=> it`s the odoo external api
+b) copy the below lines (at odoo doc) and but it at file.py
+import xmlrpc.client
+
+3) Login
+copy the below lines (at odoo doc) and but it at file.py
+common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(url)) # => url :- related to 'http://localhost:8015'
+common.version() => for test:- print("version info ========> ", common.version())
+
+4) Open Linux OR pycharm Terminal
+python (/home/ahmed/odoo16/Custom_addons/external_api.py) to test and get version info, then remove all common.version() line
+
+5) Perform The Authentication:-
+uid = common.authenticate(db, username, password, {})
+# send to odoo database, user name and pass to authentication
+# if the Authentication is succeeded we will be receiving the user id at (uid)=> test by print(uid) at python file then Open Linux Terminal
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Odoo External API: Search And Read From Odoo Database (176)
+------
+What I can suppose if i need to search inside the odoo database (maybe from the python file)
+to get emp, users ,... => Will use the search method
+
+At odoo doc:
+Calling Method => Read model (res.partner) from the python file
+----------- To calling methods we need add the below two lines:
+
+How to use ORM Method from exteranl python env [Refer to Odoo ORM Method | Odoo ORM Methods (139)]
+
+-- Calling (xmlrpc/2/object) to can use methods
+models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(url))
+# (xmlrpc/2/object) => to calling method in odoo we have to use this endpoint ,
+# For remember at calling knowing the odoo odoo external url use method (/xmlrpc/2/common) but to calling models we will use method (xmlrpc/2/object)
+# .format(url) => odoo url (url = 'http://localhost:8015')
+
+1) Search method:-
+-------
+partners = models.execute_kw(db, uid, password, 'res.partner', 'search', [[['is_company', '=', True]]], ) => anther code (models.execute_kw(db, uid, password, 'res.partner', 'check_access_rights', ['read'], {'raise_exception': False}))
+print("partners are:- ",partners) => partners are:-  [14, 10, 42, 11, 15, 43, 1, 12, 13, 9],
+# we get the ids of Contacts that related to company CUZ we have a condition here ('is_company', '=', True) IF change condition to ('email', '=', 'douglas.fletcher51@example.com') => the user that name Douglas Fletcher and id [18]
+# [[['is_company', '=', True]]], {limit': 5} => [14, 10, 42, 11, 15], Cuz add to condition {limit': 5}
+
+2) Read method:-
+------
+partner_rec = models.execute_kw(db, uid, password, 'res.partner', 'read', [partners], {'fields': ['name', 'id']}) => partner rec:-  [{'id': 14, 'name': 'Azure Interior'}, ...]
+# models :- I actually know it at models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(url))
+# partners :- the search method that get so ids as up
+# {'fields': ['name', 'id']} :- to get the just id and name of that get from search method
+
+3) Search Read method:
+------
+partner_rec_searchRead = models.execute_kw(db, uid, password, 'res.partner', 'search_read', [[['is_company', '=', True]]], {'fields': ['id', 'name'], 'limit': 5})
+
+4) Create method
+------
+vals = {'name': "New Partner"}
+create_id = models.execute_kw(db, uid, password, 'res.partner', 'create', [vals])
+print("Created record:- ",create_id)
+
+5) Update method
+-------
+
+update_NewPartner = models.execute_kw(db, uid, password, 'res.partner', 'write', [[49], {'phone': "01007196452"}])
+
+update_NewPartner49_NewPartner50 = models.execute_kw(db, uid, password, 'res.partner', 'write', [[49,50], {'phone': "01007196452"}])
+# Note:- if i need to select a lot of ids, get what you need from search method => save in variable =>  [variable, {'phone': "01007196452"}]
+
+6) Delete method
+-------
+
+delete_NewPartner50 = models.execute_kw(db, uid, password, 'res.partner', 'unlink', [[50]])
+# check if the deleted record is still in the database
+models.execute_kw(db, uid, password, 'res.partner', 'search', [[['id', '=', id]]])
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Create PDF And Excel Reports In Odoo 15 || Odoo 15 Excel Reporting | Odoo 14 PDF Reports (51)
+--------- https://www.youtube.com/watch?v=pIevsbkoq-E&list=PLqRRLx0cl0homY1elJbSoWfeQbRKJ-oPO&index=53
+
+Sali 3ala nabii:
+
+At (patient_card.xml):
+template => de conteaner kber odoo m3arafah 3shan 23ml feh running le code or layouts that odoo understand it
+id="report_patient_id_card" => make a relation between mo7tawa template with report id
+<t> => This is a tag used in Odoo's QWeb templating engine. It allows you to write dynamic, looped, or conditional content.
+t-call => deh attribute fe template 2ele ba7add feha no3 cods and layouts 2ele hatkon mawgoda fe template
+web.html.container => no3 men 2nwa3 el templates 2ele that created at odoo to defines el HTML reports that includes necessary HTML tags, CSS, and JavaScript libraries to structure the report
+
+The below to get page report:
+div (division) => dah element met3arf gowa HTML 3shan b2a contener yeshel 7abt tags
+class='page' => class:- dah css tage by3arf feh 2n el report hekon 3an page
+
+The below to get layout report:
+<t t-foreach="docs" t-as="o"> =>  docs: is a variable passed to the report template by Odoo. Typically, docs contains the records (models) that needs for which the report is being generated (e.g., a list of sale.order or res.partner objects).
+                                         The t-foreach loop iterates over all the records in the docs variable. For each record, the variable "o" is set to the current record
+<t t-call="web.external_layout"> => t3ref lel external layout
+
+=====> tab3 el xml 2a7sn
+
+To get report code
+Settings => Technical => Reports => search (id) => Appointment Medicine Lines OR Patient Card => </> QWeb views => report_patient_id_card
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+How To Create Excel Report In Odoo 14
+--------- https://www.youtube.com/watch?v=fnIpIs4UqVs&list=PLqRRLx0cl0homY1elJbSoWfeQbRKJ-oPO&index=54
+
+At any report at (Report Type) there is not Excel type, SO to solve this issue:
+----
+1) Go to (apps.odoo.com)
+2) Download (Base report xlsx) => Note: don`t forget select Version
+3) Install
+    a) xlsxwriter package (pip3 install xlsxwriter)
+    b) xlrd package (pip3 install xlrd)
+    c) report_xlsx
+
+Steps to create xlsx report
+-------
+1) at (__manifest__) => depends => add ("report_xlsx")
+2) at (report.xml) => add report action
+3) create 2 python files and add at report (report folder), 1st is __init__.py and 2nd is patient_card_xls.py (Note: don`t forget to add at main __init__.py [from . import report])
+4) at (patient_card_xls.py) file add: At (apps.odoo.com) => (Base report xlsx) => Usage
+
+from odoo import models
+
+class PartnerXlsx(models.AbstractModel):
+    _name = 'report.module_name.report_name'
+    _inherit = 'report.report_xlsx.abstract'
+
+    def generate_xlsx_report(self, workbook, data, partners):
+        for obj in partners:
+            report_name = obj.name
+            # One sheet by partner
+            sheet = workbook.add_worksheet(report_name[:31])
+            bold = workbook.add_format({'bold': True})
+            sheet.write(0, 0, obj.name, bold)
+
+
+at (_inherit = 'report.report_xlsx.abstract')
+i need to just now what is report, report_xlsx and abstract ?
+
+1.report:
+--------- The report part refers to Odoo's reporting system
+Purpose:
+- Odoo provides a comprehensive (shamel) framework for generating various (motanaw3) types of reports, such as PDF, XLSX, or HTML-based reports.
+- The report module handles the core logic of creating, rendering, and downloading reports in different formats.
+Context in Code:
+- It acts as the main namespace for all reporting functionalities.
+- Reports are typically registered under ir.actions.report in Odoo, which links models, templates, and rendering methods.
+
+2.report_xlsx
+------------- report_xlsx refers to the Excel (XLSX) report generation feature in Odoo. It is an addon module or functionality that extends the core report system to support XLSX (Excel) reports.
+Purpose:
+- Enables developers to create Excel files programmatically.
+- Provides utility (mofeda) methods for handling XLSX files using the xlsxwriter Python library.
+How it Works:
+- The report_xlsx module introduces tools and a base *abstract* model (report.report_xlsx.abstract) that developers can inherit to define custom Excel report logic
+
+3.abstract
+---------- abstract signifies (yadol 3ala) that this model is an abstract model in Odoo
+Abstract models:
+- Do not have a corresponding database table.
+- Act as reusable blueprints for other models.
+Purpose:
+- This abstract model provides reusable methods and boilerplate logic for generating Excel files.
+- When you inherit this model, you gain access to its utilities (5dmat) and structure for generating Excel reports without starting from scratch.
+
+So =>
+By inheriting report.report_xlsx.abstract, your model (PatientCardXlsx, for example) can:
+- Use prebuilt (previous) methods for creating and handling Excel workbooks.
+- Focus on defining your report-specific logic (e.g., formatting, writing data).
+
+
+Wl 5olasa:
+report: model kber feh koll mas2ol 3an (tanfez) koll 2nwa3 el reports 2ele fe odoo
+report_xlsx: sub model men report mas2ol 3an creation excel model (ta7dedn) fe odoo
+abstract: mo3 men 2nwa3 el models 2ele fe odoo (mesh create database we mas2ol 3n 2zhar bayanat models 2o5ra)
+Fa =>
+ma3na 2nk ta3ml inherit le (report.report_xlsx.abstract) fa 2nta 5alet el model beta3k
+(2ele fe 2asl howa class python named PatientCardXlsx) y2der create excel lel model 2ele marbot beh (hospital.patient)
+Fa =>
+workbook.add_format :- method mawgoda fe model men el 3 we madam ba2et ba _inherit (report.report_xlsx.abstract) fa2dr 2sta5dem 2el method and and field fe 3 :D
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Create PDF Report From Wizard In Odoo14
+--------------------------------------- https://www.youtube.com/watch?v=3UJ8UfP48B4&list=PLqRRLx0cl0homY1elJbSoWfeQbRKJ-oPO&index=65
+
+To add the <Print> button to wizard page:
+
+1) Create or inherit wizard python and xml files
+2) At xml create a normal button with type (object)
+<button name="print_report" type="object" string="Print" class="oe_highlight"/>
+3) Add (print_report) function at python
+def print_report(self):
+        return
+4) At report folder
+    a) At report.xml add record that responsible for identifying pdf from
+    b) Create pdf form
+5) Make the function at step (3) call pdf report
+def print_report(self):
+    data = {'form_data':self.read()[0]}
+        print("Data of self.read() =========>",self.read()[0]) # => Data of self.read() =========> [{'id': 55, 'appointment_id': (2, 'AP00004'), 'reason': 'txt from cancel button of the form view', 'date_cancel': datetime.date(2024, 11, 27), '__last_update': datetime.datetime(2024, 11, 27, 10, 53, 20, 751169), 'display_name': 'cancel.appointment.wizard,55', 'create_uid': (2, 'Mitchell Admin'), 'create_date': datetime.datetime(2024, 11, 27, 10, 53, 20, 751169), 'write_uid': (2, 'Mitchell Admin'), 'write_date': datetime.datetime(2024, 11, 27, 10, 53, 20, 751169)}]
+        return self.env.ref('Hospetal.report_cancel_appointment_wizard').report_action(self,data=data)
+        # self.env.ref => This fetches the report's record using its XML ID: Hospetal.report_cancel_appointment_wizard. Ensure this ID is correct and matches your report's configuration.
+        # report_action(self) => This method generates the report as a PDF and allows it to be downloaded or opened in the browser.
+        # data=data => the (1st data) is parameter related to (report_action) method saving data inform of dictionary and (2nd data) is a Python dictionary created in this method. It contains a key-value named (form_data) and his value is (a dictionary representing the current record's fields and values).
+
+Note: To calling the report using report ID (report_cancel_appointment_wizard), But to connect action <record> with report using <field name="report_name"> (Hospetal.report_cancel_appointment_id_wizard)
+-------------------------------------
+
+How check if I have (company logo, address, header, footer, and other details):
+
+1) Go to Settings > Technical > User Interface > Views
+2) Search for external_layout.
+3) Open the view web.external_layout, Ensure there is report view
+4) Navigate to Settings > Users & Companies > Companies.
+5) Select your company, Ensure the most of fields are filled
+
+
+
