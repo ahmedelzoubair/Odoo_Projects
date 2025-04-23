@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="view_inventory_form_inherit" model="ir.ui.view">
+            <field name="name">stock.inventory.form.inherit.apply.group</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable"/>
+            <!-- The previous for target the place of button
+            (view_stock_quant_tree_inventory_editable: name of the method)          -->
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_apply_inventory']" position="attributes">
+                    <attribute name="groups">apply_button.group_apply_inventory_adjustment</attribute>
+                    <!-- The previous means we add a new feature to the button
+                         Feature is: the user will not can use the functionalities of the button until he
+                                      is add to (group_apply_inventory_adjustment) that created at (apply_button) model -->
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,18 @@
+<odoo>
+    <data noupdate="0">
+
+
+        <!-- The below group created at access right to make which user can Apply Inventory Adjustment at Inventory => Operations menu => Inventory Adjustment -->
+        <record id="group_apply_inventory_adjustment" model="res.groups">
+            <field name="name">Can Apply Inventory Adjustment</field>
+            <!-- Name will appear at GUI -->
+            <field name="category_id" ref="base.module_category_inventory"/>
+            <!-- category_id => refer to places (groups) at user page (settings => users => Mitchell Admin)
+                 ref="base.module_category_inventory => will create a new tab name "other" with hit named (Inventory) -->
+        </record>
+
+        <!-- So now I will go to button and add this group by (attributes) method -->
+        <!--    That means the user that have this group will can use the button -->
+
+    </data>
+</odoo>
