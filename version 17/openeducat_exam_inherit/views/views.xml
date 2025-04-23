@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_op_exam_form_inherit" model="ir.ui.view">
+            <field name="name">view.op.exam.form.inherit</field>
+            <field name="model">op.exam</field>
+            <field name="inherit_id" ref="openeducat_exam.view_op_exam_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='min_marks']" position="after">
+                    <field name="maximum_additional_degree"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_op_result_line_form_inherit" model="ir.ui.view">
+            <field name="name">view.op.result.line.form.inherit</field>
+            <field name="model">op.result.line</field>
+            <field name="inherit_id" ref="openeducat_exam.view_op_result_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='marks']" position="after">
+                    <field name="additional_degree"/>
+                    <field name="maximum_additional_degree" readonly="1"/>
+                </xpath>
+
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submit,approved"/>
+                        <button name="action_submit" type="object" string="Submit" class="oe_highlight"
+                                invisible="state != 'draft'"/>
+                        <button name="action_approved" type="object" string="Approved" class="oe_highlight"
+                                invisible="state != 'submit'"/>
+                        <button name="action_reset_to_draft" type="object" string="Reset To Draft"
+                                invisible="state != 'submit'"/>
+                    </header>
+                </xpath>
+
+
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
+
+
