@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="view_product_category_form_inherit" model="ir.ui.view">
+            <field name="name">product.category.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group>
+                        <field name="custom_company_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_product_category_tree_inherit" model="ir.ui.view">
+            <field name="name">product.category.tree.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="custom_company_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Record rule for Product Categories -->
+        <record id="product_category_company_rule" model="ir.rule">
+            <field name="name">Product Category Company Rule</field>
+            <field name="model_id" ref="product.model_product_category"/>
+            <field name="domain_force">['|', ('custom_company_id', '=', False), ('custom_company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Record rule for Product Templates -->
+        <record id="product_template_company_rule" model="ir.rule">
+            <field name="name">Product Template Company Rule</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="domain_force">['|', ('categ_id.custom_company_id', '=', False), ('categ_id.custom_company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+    </data>
+</odoo>
