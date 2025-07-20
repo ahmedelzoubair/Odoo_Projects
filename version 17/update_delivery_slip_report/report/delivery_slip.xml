@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="update_delivery_slip_report" inherit_id="stock.report_delivery_document">
+        <xpath expr="//table[@name='stock_move_table']/thead/tr/th[@name='th_sm_ordered']" position="replace"/>
+        <xpath expr="//table[@name='stock_move_table']/tbody/tr/td[2]" position="replace"/>
+    </template>
+</odoo>
