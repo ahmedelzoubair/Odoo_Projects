@@ -1,0 +1,8 @@
+<odoo>
+    <data noupdate="0">
+        <record id="group_apply_inventory_scrap_validate" model="res.groups">
+                <field name="name">Can Apply Inventory Scrap Validate Button</field>
+            <field name="category_id" ref="base.module_category_inventory"/>
+        </record>
+    </data>
+</odoo>

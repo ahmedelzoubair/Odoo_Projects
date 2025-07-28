@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="view_inventory_form_inherit" model="ir.ui.view">
+            <field name="name">stock.inventory.form.inherit.apply.group</field>
+            <field name="model">stock.scrap</field>
+            <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_validate']" position="attributes">
+                    <attribute name="groups">validate_button.group_apply_inventory_scrap_validate</attribute>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
