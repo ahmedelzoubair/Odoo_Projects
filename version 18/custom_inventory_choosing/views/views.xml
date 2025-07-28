@@ -1,0 +1,17 @@
+<!-- views/stock_picking_views.xml -->
+<odoo>
+    <data>
+        <record id="stock_picking_inherit_operation_type_filter" model="ir.ui.view">
+            <field name="name">stock.picking.inherit.operation.type.filter</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='picking_type_id']" position="replace">
+                    <field name="picking_type_id" options="{'no_open': True}"
+                           readonly="state in ('done', 'cancel')"
+                           domain="[('code', 'in', ('incoming', 'outgoing', 'internal')), ('warehouse_id', '=', warehouse_id)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
