@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="custom_confirmation_authority_permission" model="ir.ui.view">
+            <field name="name">confirmation.authority.permission</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[7]" position="attributes">
+                    <attribute name="groups">confirmation_authority.group_confirmation_authority</attribute>
+                </xpath>
+                <xpath expr="//header/button[8]" position="attributes">
+                    <attribute name="groups">confirmation_authority.group_confirmation_authority</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

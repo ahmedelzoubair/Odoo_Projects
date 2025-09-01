@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+        <record id="group_confirmation_authority" model="res.groups">
+            <field name="name">Sales Confirm</field>
+        </record>
+    </data>
+</odoo>
