@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="create_shipping_return_wizard_form" model="ir.ui.view">
+        <field name="name">create.shipping.return.wizard.form</field>
+        <field name="model">create.shipping.return.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <h1>
+                        <field name="sales_order_seq" readonly="1"/>
+                    </h1>
+                    <label for="name"/>
+                    <h3>
+                        <field name="name"/>
+                    </h3>
+                    <group>
+                        <field name="address"/>
+                        <field name="consignee_state"/>
+                        <field name="consignee_city"/>
+                    </group>
+                    <group>
+                        <field name="consignee_phone" widget="phone"/>
+                        <field name="cargo_value"/>
+                        <field name="cod"/>
+                    </group>
+                    <group>
+                        <field name="return_type_new"/>
+                    </group>
+                </group>
+                <separator/>
+                <group>
+                    <field name="description" widget="text" readonly="1"/> <!-- Use text widget for longer content -->
+                </group>
+                <footer>
+                    <button name="create_return" string="Create Return" class="btn-primary" type="object"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="v"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_create_return" model="ir.actions.act_window">
+        <field name="name">Create_Return</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.shipping.return.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>
+
+

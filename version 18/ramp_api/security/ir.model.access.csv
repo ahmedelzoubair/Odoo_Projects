@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_delivery_carrier_lines,access_delivery_carrier_lines,model_delivery_carrier_lines,,1,1,1,1
+access_create_shipping_request_wizard,access_create_shipping_request_wizard,model_create_shipping_request_wizard,,1,1,1,1
+access_create_shipping_return_wizard,access_create_return_request_wizard,model_create_shipping_return_wizard,,1,1,1,1
+access_ramp_api_response,access_ramp_api_response,model_ramp_api_response,,1,1,1,1
+access_ramp_api_return,access_ramp_api_return,model_ramp_api_return,,1,1,1,1

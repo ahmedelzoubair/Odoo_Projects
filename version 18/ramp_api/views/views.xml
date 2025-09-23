@@ -1,0 +1,192 @@
+<odoo>
+    <data>
+        <!-- The below create Ramp Configuration -->
+        <record id="view_delivery_carrier_form_inherit_ramp" model="ir.ui.view">
+            <field name="name">delivery.carrier.form.inherit.ramp</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='description']" position="after">
+                    <page string="Ramp Configuration" name="ramp_configuration"
+                          invisible="delivery_type != 'ramp_delivery'">
+                        <group>
+                            <group>
+                                <field name="ramp_api_key" string="Ramp API Key"/>
+                                <field name="ramp_api_url" string="Ramp API URL"/>
+                                <field name="ramp_tracking_endpoint"/>
+                                <field name="ramp_delivery_note"/>
+                            </group>
+                            <field name="ramp_lines">
+                                <list editable="bottom">
+                                    <field name="city"/>
+                                    <field name="price"/>
+                                </list>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- The below to create button that open wizard form -->
+        <record id="view_stock_picking_new_form" model="ir.ui.view">
+            <field name="name">view.stock.picking.new.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="picking_method" string='Create Shipping Request' type="object"
+                            invisible="state != 'done' or picking_type_code != 'outgoing'"
+                            class="oe_highlight"/>
+                    <button name="picking_method_return" string='Create Return Request' type="object"
+                            invisible="picking_type_code != 'incoming' or state != 'done'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- The below to create button the smart buttons -->
+        <record id="json_response_smart_button" model="ir.ui.view">
+            <field name="name">json.response.smart.button</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <button name="open_website_url" position="after">
+                    
+                    <button name="json_response_smart_button" string='Shipment' type="object"
+                            class="oe_stat_button" icon="fa-truck"
+                            invisible="state != 'done' or picking_type_code != 'outgoing'">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="ramp_response_count"/>
+                            </span>
+                            <span class="o_stat_text">Shipment</span>
+                        </div>
+                    </button>
+
+
+                    <button name="json_return_smart_button" string='Return' type="object"
+                            class="oe_stat_button" icon="fa-bars"
+                            invisible="picking_type_code != 'incoming' or state != 'done'">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="ramp_return_count"/>
+                            </span>
+                            <span class="o_stat_text">Returns</span>
+                        </div>
+                    </button>
+                </button>
+            </field>
+        </record>
+
+        <!-- The below to create the view that will save the line of response data -->
+        <record id="ramp_api_response_tree" model="ir.ui.view">
+            <field name="name">ramp.api.response.tree</field>
+            <field name="model">ramp.api.response</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="response_date"/>
+                    <field name="sale_number"/>
+                    <field name="waybillNumber"/>
+                    <field name="messageType"/>
+                    <field name="status"/>
+                    <field name="message"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form view -->
+        <record id="ramp_api_response_form" model="ir.ui.view">
+            <field name="name">ramp.api.response.form</field>
+            <field name="model">ramp.api.response</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="picking_id"/>
+                                <field name="sale_number"/>
+                                <field name="waybillNumber"/>
+                            </group>
+                            <group>
+                                <field name="message"/>
+                                <field name="messageType"/>
+                                <field name="status"/>
+                                <field name="response_date"/>
+                            </group>
+                            <group>
+                                <field name="labelURL" widget="url"/>
+                                <field name="packageStickerURL" widget="url"/>
+                                <field name="trackingURL" widget="url"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action view -->
+        <record id="ramp_api_response_action" model="ir.actions.act_window">
+            <field name="name">Ramp Api Response Action</field>
+            <field name="res_model">ramp.api.response</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- The below to create the view that will save the line of return data -->
+        <record id="ramp_api_return_tree" model="ir.ui.view">
+            <field name="name">ramp.api.return.tree</field>
+            <field name="model">ramp.api.return</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="response_date"/>
+                    <field name="sale_number"/>
+                    <field name="waybillNumber"/>
+                    <field name="messageType"/>
+                    <field name="status"/>
+                    <field name="message"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form view -->
+        <record id="ramp_api_return_form" model="ir.ui.view">
+            <field name="name">ramp.api.return.form</field>
+            <field name="model">ramp.api.return</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="picking_id"/>
+                                <field name="sale_number"/>
+                                <field name="waybillNumber"/>
+                            </group>
+                            <group>
+                                <field name="message"/>
+                                <field name="messageType"/>
+                                <field name="status"/>
+                                <field name="response_date"/>
+                            </group>
+                            <group>
+                                <field name="labelURL" widget="url"/>
+                                <field name="packageStickerURL" widget="url"/>
+                                <field name="trackingURL" widget="url"/>
+                            </group>
+                            <group>
+                                <field name="return_type_new"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action view -->
+        <record id="ramp_api_return_action" model="ir.actions.act_window">
+            <field name="name">Ramp Api Return Action</field>
+            <field name="res_model">ramp.api.return</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
