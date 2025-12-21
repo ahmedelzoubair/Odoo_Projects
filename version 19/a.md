@@ -1,1 +1,1 @@
-This is odoo projects for version 19.
+This is odoo projects for version 19
