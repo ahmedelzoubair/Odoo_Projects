@@ -1,0 +1,59 @@
+<odoo>
+    <data>
+        <record id="view_partner_property_form_new_fields" model="ir.ui.view">
+            <field name="name">res.partner.property.form.inherit.new.fields</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <div>
+                        <group>
+                            <field name="customer_code"/>
+                            <field name="commercial_customer_name"/>
+                            <field name="customer_status"/>
+                            <field name="contact_person"/>
+                            <field name="national_id"/>
+                        </group>
+
+                        <group>
+                            <group>
+                                <label for="delivery_start_hour" string="Delivery Start Time"/>
+                                <div class="o_row">
+                                    <field name="delivery_start_hour" class="oe_inline" placeholder="Hour"/>
+                                    <span>:</span>
+                                    <field name="delivery_start_minute" class="oe_inline" placeholder="Min"/>
+                                    <field name="delivery_start_period" class="oe_inline"/>
+                                </div>
+
+                                <label for="delivery_end_hour" string="Delivery End Time"/>
+                                <div class="o_row">
+                                    <field name="delivery_end_hour" class="oe_inline" placeholder="Hour"/>
+                                    <span>:</span>
+                                    <field name="delivery_end_minute" class="oe_inline" placeholder="Min"/>
+                                    <field name="delivery_end_period" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="delivery_start_time" readonly="1"/>
+                                <field name="delivery_end_time" readonly="1"/>
+                            </group>
+                        </group>
+
+                    </div>
+                </xpath>
+
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <div>
+                        <group>
+                            <field name="google_map_link" widget="url" placeholder="https://maps.google.com/..."/>
+                            <field name="annual_activity_anniversary"/>
+                            <field name="gender"/>
+                            <field name="payment_term_id"/>
+                            <field name="sales_person"/>
+                        </group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
