@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_requisition_form_inherit_sections_catalog" model="ir.ui.view">
+        <field name="name">purchase.requisition.form.inherit.sections.catalog</field>
+        <field name="model">purchase.requisition</field>
+        <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add the widget -->
+            <field name="line_ids" position="attributes">
+                <attribute name="widget">section_and_note_one2many</attribute>
+            </field>
+
+
+            <!-- Add display_type field as first column -->
+            <xpath expr="//field[@name='line_ids']/list" position="inside">
+                <field name="display_type" invisible="1"/>
+                <field name="name" widget="section_and_note_text" invisible="display_type == False"/>
+            </xpath>
+
+
+            <!-- Add control buttons -->
+            <xpath expr="//field[@name='line_ids']/list" position="inside">
+                <control>
+                    <create name="add_product_control" string="Add a Line"/>
+                    <create name="add_section_control" string="Add a section"
+                            context="{'default_display_type': 'line_section'}"/>
+                    <create name="add_note_control" string="Add a note"
+                            context="{'default_display_type': 'line_note'}"/>
+                </control>
+            </xpath>
+
+            <!-- Hide product field for sections/notes -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='product_id']" position="attributes">
+                <attribute name="invisible">display_type != False</attribute>
+            </xpath>
+
+
+            <!-- IMPORTANT: Make description visible ONLY for sections/notes with special widget -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='product_description_variants']"
+                   position="attributes">
+                <attribute name="widget">section_and_note_text</attribute>
+                <attribute name="invisible">display_type == False</attribute>
+            </xpath>
+
+            <!-- Hide quantity for sections/notes -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='product_qty']" position="attributes">
+                <attribute name="invisible">display_type != False</attribute>
+            </xpath>
+
+            <!-- Hide ordered qty for sections/notes -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='qty_ordered']" position="attributes">
+                <attribute name="invisible">display_type != False</attribute>
+            </xpath>
+
+            <!-- Hide UoM for sections/notes -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='product_uom_id']" position="attributes">
+                <attribute name="invisible">display_type != False</attribute>
+            </xpath>
+
+            <!-- Hide price for sections/notes -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='price_unit']" position="attributes">
+                <attribute name="invisible">display_type != False</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
