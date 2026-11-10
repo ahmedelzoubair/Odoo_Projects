@@ -18,7 +18,13 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'point_of_sale'],
+
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'max_disc_pos/static/src/js/line_discount.js',
+        ],
+    },
 
     # always loaded
     'data': [
